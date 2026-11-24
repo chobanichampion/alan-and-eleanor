@@ -1,0 +1,3318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slow &amp; Sweet: Alan &amp; Eleanor’s Field Guide to Us 🐌🌸🐢</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================================
+       1. DESIGN TOKENS & RESET (100% SELF-CONTAINED VANILLA CSS)
+    ========================================================================= */
+    :root {
+      --sakura-bg: #FFF0F5;
+      --sakura-soft: #FFE4EC;
+      --sakura-light: #FADADD;
+      --sakura: #FF5C93;
+      --sakura-deep: #E6487D;
+      --turquoise-pale: #DDF9F6;
+      --turquoise-light: #9EEFE8;
+      --turquoise: #2EC4B6;
+      --turquoise-deep: #1D9B8F;
+      --charcoal: #363338;
+      --charcoal-muted: #68626B;
+      --white: #FFFFFF;
+      --cream: #FFFDFB;
+      --shadow-pink: 0 10px 28px -8px rgba(230, 72, 125, 0.18);
+      --shadow-soft: 0 4px 14px -4px rgba(54, 51, 56, 0.08);
+      --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-hand: 'Caveat', cursive, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--sakura-bg);
+      background-image:
+        radial-gradient(var(--sakura-light) 1.6px, transparent 1.6px),
+        radial-gradient(#FFE6EE 1.6px, var(--sakura-bg) 1.6px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+      color: var(--charcoal);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0;
+      font-family: var(--font-serif);
+      color: var(--charcoal);
+      line-height: 1.22;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    section[id] {
+      scroll-margin-top: 76px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =========================================================================
+       2. ANIMATIONS & MICRO-INTERACTIONS
+    ========================================================================= */
+    .btn-squishy {
+      transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-squishy:hover {
+      transform: translateY(-2px) scale(1.015);
+    }
+    .btn-squishy:active {
+      transform: scale(0.94);
+    }
+
+    .mascot-wiggle {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .mascot-wiggle:hover {
+      transform: rotate(-4deg) scale(1.04);
+    }
+    .mascot-wiggle:active {
+      transform: rotate(5deg) scale(0.95);
+    }
+
+    /* Ambient Falling Sakura Petals & Turquoise Droplets */
+    .petal-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 40;
+      overflow: hidden;
+    }
+    .falling-petal {
+      position: absolute;
+      top: -32px;
+      animation: petalFall linear infinite;
+      opacity: 0.85;
+      user-select: none;
+    }
+    @keyframes petalFall {
+      0% { transform: translateY(-30px) translateX(0px) rotate(0deg); opacity: 0; }
+      12% { opacity: 0.88; }
+      50% { transform: translateY(50vh) translateX(28px) rotate(180deg); }
+      88% { opacity: 0.88; }
+      100% { transform: translateY(105vh) translateX(-18px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Click Burst Particles */
+    .burst-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 16px;
+      user-select: none;
+      animation: burstFly 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes burstFly {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.25) rotate(var(--rot)); }
+    }
+
+    /* Floating Heart above Corner Mascot */
+    .float-heart {
+      position: absolute;
+      pointer-events: none;
+      animation: floatUpHeart 1.1s ease-out forwards;
+    }
+    @keyframes floatUpHeart {
+      0% { opacity: 1; transform: translateY(0) scale(0.75); }
+      100% { opacity: 0; transform: translateY(-48px) scale(1.3); }
+    }
+
+    /* Animated Dual-Layer Turquoise Ocean Waves */
+    .wave-drift-slow {
+      animation: waveDrift 8.5s ease-in-out infinite alternate;
+    }
+    .wave-drift-fast {
+      animation: waveDriftReverse 6s ease-in-out infinite alternate;
+    }
+    @keyframes waveDrift {
+      0% { transform: translateX(-14px); }
+      100% { transform: translateX(14px); }
+    }
+    @keyframes waveDriftReverse {
+      0% { transform: translateX(16px); }
+      100% { transform: translateX(-16px); }
+    }
+
+    /* =========================================================================
+       3. STICKY TOP HEADER & NAVIGATION
+    ========================================================================= */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1.5px solid var(--sakura-light);
+      box-shadow: 0 2px 10px rgba(230, 72, 125, 0.06);
+    }
+    .header-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--charcoal);
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 0.92rem;
+      flex-shrink: 0;
+    }
+    .brand-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--sakura), var(--turquoise));
+      color: var(--white);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 2px 6px rgba(255, 92, 147, 0.3);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 2px 0;
+    }
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+    .nav-link {
+      text-decoration: none;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .nav-link:hover {
+      background: var(--sakura-bg);
+    }
+    .nav-link.active {
+      background: var(--sakura);
+      color: var(--white);
+      font-weight: 800;
+    }
+    .petal-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--sakura-bg);
+      border: 1.5px solid var(--sakura-light);
+      color: var(--charcoal);
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sakura);
+      display: inline-block;
+    }
+    .status-dot.off {
+      background: #CBD5E1;
+    }
+
+    /* =========================================================================
+       4. MAIN LAYOUT & SHARED COMPONENTS
+    ========================================================================= */
+    .main-container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 28px 16px 110px;
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+    }
+
+    .card-panel {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: var(--shadow-pink);
+    }
+    @media (min-width: 640px) {
+      .card-panel {
+        padding: 32px;
+      }
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .eyebrow-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .eyebrow-pink {
+      background: var(--sakura-soft);
+      color: var(--sakura-deep);
+      border: 1px solid var(--sakura-light);
+    }
+    .eyebrow-teal {
+      background: var(--turquoise-pale);
+      color: var(--turquoise-deep);
+      border: 1px solid var(--turquoise-light);
+    }
+    .section-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+    }
+    @media (min-width: 640px) {
+      .section-title {
+        font-size: 1.95rem;
+      }
+    }
+    .section-sub {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--charcoal-muted);
+      margin-top: 4px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .filter-pill {
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      border: 1.5px solid var(--sakura-light);
+      background: var(--sakura-bg);
+      color: var(--charcoal);
+    }
+    .filter-pill.active-pink {
+      background: var(--sakura);
+      border-color: var(--sakura);
+      color: var(--white);
+      font-weight: 800;
+    }
+    .filter-pill.active-teal {
+      background: linear-gradient(135deg, var(--turquoise), var(--turquoise-deep));
+      border-color: var(--turquoise-deep);
+      color: var(--white);
+      font-weight: 800;
+    }
+    .filter-pill.teal-outline {
+      background: var(--white);
+      border-color: var(--turquoise-light);
+      color: var(--charcoal);
+    }
+
+    /* =========================================================================
+       5. HERO SECTION (BUBU, DUDU, SNAIL, TURTLE, CALICO CAT & TURQUOISE WAVES)
+    ========================================================================= */
+    .hero-card {
+      position: relative;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF9FB 62%, #DDF9F6 100%);
+      border: 2px solid var(--sakura-light);
+      padding: 28px 22px 62px;
+      box-shadow: var(--shadow-pink);
+      overflow: hidden;
+    }
+    @media (min-width: 640px) {
+      .hero-card {
+        padding: 36px 36px 68px;
+      }
+    }
+    .hero-peeking-cat {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      z-index: 15;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    @media (min-width: 860px) {
+      .hero-grid {
+        grid-template-columns: 1.25fr 0.95fr;
+      }
+    }
+    .hero-copy {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    @media (min-width: 860px) {
+      .hero-copy {
+        text-align: left;
+      }
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: center;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--sakura-soft), #FFFFFF, var(--turquoise-pale));
+      border: 1.5px solid var(--sakura-light);
+      color: var(--sakura-deep);
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+    @media (min-width: 860px) {
+      .hero-tag {
+        align-self: flex-start;
+      }
+    }
+    .hero-title {
+      font-size: 1.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    @media (min-width: 640px) {
+      .hero-title {
+        font-size: 2.45rem;
+      }
+    }
+    .hero-title span.accent {
+      color: var(--sakura-deep);
+    }
+    .hero-subtitle {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--charcoal-muted);
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    @media (min-width: 860px) {
+      .hero-subtitle {
+        margin: 0;
+      }
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 440px;
+      margin: 4px auto 0;
+    }
+    @media (min-width: 860px) {
+      .hero-stats {
+        margin: 4px 0 0;
+      }
+    }
+    .stat-box {
+      text-decoration: none;
+      border-radius: 18px;
+      padding: 12px 8px;
+      text-align: center;
+      border: 1.5px solid var(--sakura-light);
+      background: rgba(255, 240, 245, 0.9);
+    }
+    .stat-box.teal {
+      background: linear-gradient(135deg, var(--turquoise-pale), rgba(158, 239, 232, 0.55));
+      border-color: var(--turquoise);
+    }
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--sakura-deep);
+    }
+    .stat-box.teal .stat-num {
+      color: var(--turquoise-deep);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--charcoal-muted);
+      margin-top: 2px;
+    }
+    .hero-art-box {
+      background: linear-gradient(180deg, rgba(255, 240, 245, 0.92), rgba(221, 249, 246, 0.92));
+      border: 2px solid var(--sakura-light);
+      border-radius: 24px;
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--shadow-soft);
+    }
+    .hero-waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* =========================================================================
+       6. SECTION 1: OUR STORY (4 CHAPTERS + SHORELINE SLIDER)
+    ========================================================================= */
+    .story-stage {
+      background: linear-gradient(135deg, #FFF5F8 0%, #F4FCFB 100%);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 22px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+    @media (min-width: 720px) {
+      .story-stage {
+        grid-template-columns: 220px 1fr;
+        padding: 24px;
+      }
+    }
+    .story-art-frame {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 18px;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .story-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .story-chapter-num {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--sakura-deep);
+    }
+    .story-text {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+    .story-quote {
+      font-family: var(--font-hand);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--sakura-deep);
+      margin-bottom: 12px;
+    }
+    .story-nav-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-secondary {
+      padding: 7px 14px;
+      border-radius: 12px;
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      color: var(--charcoal);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .btn-primary-pink {
+      padding: 7px 15px;
+      border-radius: 12px;
+      background: var(--sakura);
+      border: 1.5px solid var(--sakura);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .btn-gradient-love {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--sakura), var(--turquoise));
+      border: none;
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(46, 196, 182, 0.28);
+    }
+
+    /* Shoreline Path Slider */
+    .shoreline-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .shoreline-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+    .shoreline-track {
+      position: relative;
+      height: 82px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #FFE4EC 0%, #FFF0F5 55%, #9EEFE8 100%);
+      border: 1.5px solid var(--turquoise);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .shoreline-waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      pointer-events: none;
+    }
+    .center-heart {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -4px);
+      font-size: 1.65rem;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+    .walker-badge {
+      position: absolute;
+      transform: translateY(-4px);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: left 0.14s ease-out, right 0.14s ease-out;
+    }
+    .walker-name {
+      font-size: 0.68rem;
+      font-weight: 800;
+      background: var(--white);
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1.5px solid var(--sakura-light);
+      color: var(--sakura-deep);
+    }
+    .walker-name.alan {
+      border-color: var(--turquoise);
+      color: var(--turquoise-deep);
+    }
+    input[type="range"].love-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--sakura-light) 0%, var(--sakura) 50%, var(--turquoise) 100%);
+      border: 2px solid var(--white);
+      box-shadow: 0 2px 6px rgba(255, 92, 147, 0.22);
+      outline: none;
+    }
+    input[type="range"].love-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--sakura);
+      border: 3px solid var(--white);
+      box-shadow: 0 3px 10px rgba(230, 72, 125, 0.45);
+      cursor: pointer;
+    }
+    input[type="range"].love-slider::-moz-range-thumb {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--sakura);
+      border: 3px solid var(--white);
+      box-shadow: 0 3px 10px rgba(230, 72, 125, 0.45);
+      cursor: pointer;
+    }
+    .reunion-banner {
+      border-radius: 14px;
+      background: linear-gradient(90deg, var(--sakura-soft), var(--white), var(--turquoise-pale));
+      border: 1.5px solid var(--sakura);
+      padding: 10px 14px;
+      text-align: center;
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--sakura-deep);
+    }
+
+    /* =========================================================================
+       7. SECTION 2: MEMORY LANE (DATES WE'VE BEEN ON)
+    ========================================================================= */
+    .toolbar-card {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+    .inline-form {
+      display: flex;
+      gap: 6px;
+      flex: 1 1 240px;
+      max-width: 340px;
+    }
+    .cute-input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--sakura-light);
+      background: var(--sakura-bg);
+      color: var(--charcoal);
+      font-size: 0.8rem;
+      font-weight: 700;
+      outline: none;
+    }
+    .cute-input:focus {
+      border-color: var(--sakura);
+      background: var(--white);
+    }
+
+    .memories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .memory-card {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 18px;
+      padding: 13px 14px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      box-shadow: var(--shadow-soft);
+    }
+    .memory-card.outings {
+      background: #FFF7FA;
+      border-color: var(--sakura-light);
+    }
+    .memory-card.cozy {
+      background: linear-gradient(135deg, #F0FCFB, var(--turquoise-pale));
+      border-color: var(--turquoise-light);
+    }
+    .memory-card.food {
+      background: var(--white);
+      border-color: #F8D1DF;
+    }
+    .memory-emoji {
+      font-size: 1.55rem;
+      flex-shrink: 0;
+    }
+    .memory-title {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--charcoal);
+    }
+    .memory-tag {
+      display: inline-block;
+      margin-top: 2px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--sakura-deep);
+    }
+    .memory-card.cozy .memory-tag {
+      color: var(--turquoise-deep);
+    }
+
+    /* =========================================================================
+       8. SECTION 3: ELLE'S MENU & NYC FOOD GUIDE
+    ========================================================================= */
+    .alert-card {
+      background: #FFF5F7;
+      border: 1.5px solid #FECDD3;
+      border-radius: 22px;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    @media (min-width: 720px) {
+      .alert-card {
+        grid-template-columns: 110px 1fr 1fr;
+      }
+    }
+    .alert-mascot {
+      background: var(--white);
+      border: 1.5px solid #FECDD3;
+      border-radius: 16px;
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .alert-subbox {
+      background: var(--white);
+      border: 1.5px solid #FFE4E6;
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+    .alert-subbox.amber {
+      border-color: #FDE68A;
+    }
+    .alert-heading {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #E11D48;
+      margin-bottom: 8px;
+    }
+    .alert-subbox.amber .alert-heading {
+      color: #B45309;
+    }
+    .chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .warn-chip {
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #FFE4E6;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--charcoal);
+    }
+    .warn-chip.amber {
+      background: #FEF3C7;
+    }
+
+    .cravings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .craving-item {
+      background: #FFF8FA;
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .craving-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .craving-cat {
+      font-size: 0.64rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: var(--white);
+      color: var(--sakura-deep);
+      border: 1px solid var(--sakura-light);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .craving-name {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .craving-note {
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--charcoal-muted);
+    }
+
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin: 18px 0;
+    }
+    @media (min-width: 720px) {
+      .two-col-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .goto-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F0FCFB;
+      border: 1.5px solid var(--turquoise-light);
+      border-radius: 14px;
+      padding: 9px 12px;
+      margin-top: 8px;
+    }
+    .freebies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .freebie-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #FFF7FA;
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    /* Directory Scroll Grid */
+    .dir-grid {
+      max-height: 390px;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .check-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      text-align: left;
+      padding: 9px 12px;
+      border-radius: 13px;
+      border: 1.5px solid var(--sakura-light);
+      background: #FFF8FA;
+      color: var(--charcoal);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .check-btn.done {
+      background: var(--turquoise-pale);
+      border-color: var(--turquoise);
+      color: var(--charcoal-muted);
+    }
+    .check-btn.done .item-label {
+      text-decoration: line-through;
+    }
+
+    /* =========================================================================
+       9. SECTION 4: DATE SPINNER & ADVENTURES
+    ========================================================================= */
+    .spinner-box {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .slot-display {
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(135deg, #FFF5F8, #F0FCFB);
+      border: 2px dashed var(--sakura);
+      border-radius: 22px;
+      padding: 20px 18px;
+    }
+    .slot-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+      display: inline-block;
+      transition: transform 0.18s ease;
+    }
+    .slot-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .slot-tag {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 12px;
+      border-radius: 999px;
+      background: var(--white);
+      border: 1px solid var(--sakura-light);
+      color: var(--sakura-deep);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+    .btn-spin-big {
+      padding: 12px 28px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--sakura), var(--sakura-deep));
+      border: none;
+      color: var(--white);
+      font-size: 0.95rem;
+      font-weight: 800;
+      box-shadow: 0 8px 20px -6px rgba(230, 72, 125, 0.5);
+    }
+
+    details.quest-accordion {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 22px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-soft);
+    }
+    details.quest-accordion summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    details.quest-accordion summary::-webkit-details-marker {
+      display: none;
+    }
+    .quest-count-pill {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--sakura-bg);
+      color: var(--sakura-deep);
+      border: 1px solid var(--sakura-light);
+      margin-left: 8px;
+    }
+    .quest-items-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 9px;
+    }
+
+    /* =========================================================================
+       10. SECTION 5: TRAVEL & HIKES
+    ========================================================================= */
+    .three-col-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    @media (min-width: 760px) {
+      .three-col-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .region-card {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 22px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--shadow-soft);
+    }
+    .world-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .world-card {
+      background: linear-gradient(135deg, #FFFFFF 0%, #F2FCFB 100%);
+      border: 1.5px solid var(--turquoise-light);
+      border-radius: 18px;
+      padding: 15px;
+      box-shadow: var(--shadow-soft);
+    }
+    .world-card-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .world-note {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--charcoal-muted);
+    }
+
+    /* =========================================================================
+       11. SECTION 6: SCRAPBOOK & SHARED GOALS
+    ========================================================================= */
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .polaroid-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .polaroid-card {
+      background: var(--white);
+      border: 1.5px solid var(--sakura-light);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+    .polaroid-card:nth-child(odd) {
+      transform: rotate(-0.8deg);
+    }
+    .polaroid-card:nth-child(even) {
+      transform: rotate(0.8deg);
+    }
+    .polaroid-card:hover {
+      transform: rotate(0deg) translateY(-4px);
+      box-shadow: var(--shadow-pink);
+    }
+    .polaroid-card.flipped {
+      background: linear-gradient(135deg, var(--sakura-bg), var(--turquoise-pale));
+      border-color: var(--turquoise);
+    }
+    .polaroid-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .polaroid-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      background: var(--sakura-soft);
+      color: var(--sakura-deep);
+    }
+    .polaroid-badge.mem {
+      background: var(--turquoise-pale);
+      color: var(--turquoise-deep);
+    }
+    .polaroid-text {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+    .polaroid-back-text {
+      font-family: var(--font-hand);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--sakura-deep);
+      line-height: 1.35;
+    }
+
+    /* =========================================================================
+       12. SECTION 7: SECRET KEEPSAKE VAULT
+    ========================================================================= */
+    .vault-locked {
+      position: relative;
+      background: var(--white);
+      border: 2px solid var(--sakura-light);
+      border-radius: 28px;
+      padding: 38px 22px;
+      text-align: center;
+      box-shadow: var(--shadow-pink);
+      overflow: hidden;
+    }
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 85px;
+      background: linear-gradient(180deg, rgba(255, 92, 147, 0.16), transparent);
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      pointer-events: none;
+    }
+    .wax-seal-btn {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sakura), var(--sakura-deep));
+      border: 4px solid var(--sakura-soft);
+      color: var(--white);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px rgba(230, 72, 125, 0.4);
+      margin-top: 12px;
+    }
+    .vault-unlocked-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: var(--sakura-soft);
+      border: 1.5px solid var(--sakura);
+      border-radius: 18px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      font-family: var(--font-serif);
+      font-weight: 700;
+    }
+    .mutual-box {
+      border-radius: 18px;
+      padding: 16px;
+      border: 1.5px solid var(--sakura-light);
+      background: #FFF7FA;
+    }
+    .mutual-box.alan {
+      background: #F0FCFB;
+      border-color: var(--turquoise-light);
+    }
+    .mutual-list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .love-def-item {
+      background: var(--sakura-bg);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .name-chip {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      margin: 3px 3px 0 0;
+      background: var(--turquoise-pale);
+      color: var(--charcoal);
+    }
+    .name-chip.girl {
+      background: var(--sakura-soft);
+    }
+
+    /* =========================================================================
+       13. MODAL, FLOATING CORNER WIDGET & FOOTER
+    ========================================================================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(54, 51, 56, 0.45);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      background: var(--white);
+      border: 2px solid var(--sakura);
+      border-radius: 26px;
+      padding: 28px 24px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .passcode-input {
+      width: 150px;
+      margin: 0 auto;
+      text-align: center;
+      letter-spacing: 0.25em;
+      font-size: 1.3rem;
+      font-weight: 800;
+      padding: 8px 12px;
+      border-radius: 14px;
+      border: 2px solid var(--sakura-light);
+      background: var(--sakura-bg);
+      outline: none;
+    }
+    .passcode-input:focus {
+      border-color: var(--sakura);
+    }
+
+    .floating-dock {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 45;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mascot-bubble {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1.5px solid var(--sakura);
+      border-radius: 18px 18px 4px 18px;
+      padding: 8px 12px;
+      max-width: 215px;
+      box-shadow: var(--shadow-soft);
+      font-family: var(--font-hand);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    @media (max-width: 640px) {
+      .mascot-bubble {
+        display: none;
+      }
+      .mascot-bubble.show-mobile {
+        display: block;
+      }
+    }
+    .corner-mascot-btn {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--sakura);
+      box-shadow: 0 6px 18px rgba(230, 72, 125, 0.28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+    }
+    .top-btn {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: var(--sakura);
+      border: none;
+      color: var(--white);
+      font-size: 0.75rem;
+      font-weight: 800;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .site-footer {
+      border-top: 1.5px solid var(--sakura-light);
+      padding-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--charcoal-muted);
+    }
+    .reset-link {
+      background: none;
+      border: none;
+      text-decoration: underline;
+      color: var(--charcoal-muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .reset-link:hover {
+      color: var(--sakura-deep);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Falling Cherry Blossoms & Turquoise Water Droplets -->
+  <div id="petal-container" class="petal-layer" aria-hidden="true"></div>
+
+  <!-- =========================================================================
+       STICKY TOP BAR
+  ========================================================================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#top" class="brand-link">
+        <span class="brand-badge">🐌</span>
+        <span>Alan &amp; Eleanor <span style="color: var(--sakura-deep);">🌸🐢</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Section Navigation">
+        <a href="#our-story" data-nav="our-story" class="nav-link btn-squishy">📖 Our Story</a>
+        <a href="#memories" data-nav="memories" class="nav-link btn-squishy">✨ Memories</a>
+        <a href="#elles-menu" data-nav="elles-menu" class="nav-link btn-squishy">🍣 Elle's Menu</a>
+        <a href="#dates-adventures" data-nav="dates-adventures" class="nav-link btn-squishy">🎡 Adventures</a>
+        <a href="#travel-hikes" data-nav="travel-hikes" class="nav-link btn-squishy">✈️ Travel</a>
+        <a href="#scrapbook" data-nav="scrapbook" class="nav-link btn-squishy">📸 Scrapbook</a>
+        <a href="#vault" data-nav="vault" class="nav-link btn-squishy">💌 Vault</a>
+      </nav>
+
+      <button type="button" data-action="toggle-petals" class="petal-toggle-btn btn-squishy" title="Toggle falling blossoms & water droplets">
+        <span id="petal-dot" class="status-dot"></span>
+        <span>🌸💧</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top" class="main-container">
+
+    <!-- =========================================================================
+         HERO CARD
+    ========================================================================= -->
+    <section class="hero-card">
+      <!-- Calico Cat Peeking Over Top-Right Edge -->
+      <div data-action="pet-hero-cat" class="mascot-wiggle hero-peeking-cat" title="Meow! Tap the Calico Kitty!">
+        <svg viewBox="0 0 110 56" width="92" height="48" aria-label="Calico cat peeking">
+          <polygon points="22,38 28,8 44,28" fill="#FFFDFB" stroke="#363338" stroke-width="2.5" stroke-linejoin="round" />
+          <polygon points="27,32 30,15 40,27" fill="#FF5C93" opacity="0.65" />
+          <polygon points="88,38 82,8 66,28" fill="#8C6239" stroke="#363338" stroke-width="2.5" stroke-linejoin="round" />
+          <polygon points="83,32 80,15 70,27" fill="#FF5C93" opacity="0.65" />
+          <path d="M18,54 C18,24 92,24 92,54 Z" fill="#FFFDFB" stroke="#363338" stroke-width="2.5" />
+          <path d="M56,28 C72,27 86,36 90,52 L64,52 Z" fill="#F4A261" opacity="0.72" />
+          <path d="M36,42 Q40,38 44,42" stroke="#363338" stroke-width="2.3" fill="none" stroke-linecap="round" />
+          <path d="M66,42 Q70,38 74,42" stroke="#363338" stroke-width="2.3" fill="none" stroke-linecap="round" />
+          <polygon points="53,45 57,45 55,48" fill="#FF5C93" />
+          <path d="M50,49 Q55,53 60,49" stroke="#363338" stroke-width="2" fill="none" stroke-linecap="round" />
+          <ellipse cx="32" cy="48" rx="5" ry="3" fill="#FF5C93" opacity="0.75" />
+          <ellipse cx="78" cy="48" rx="5" ry="3" fill="#FF5C93" opacity="0.75" />
+        </svg>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="hero-tag">🌸 Sakura &amp; Peonies • 🌊 Turquoise Waters • 🐻❤️🐻‍❄️ Bubu &amp; Dudu</span>
+
+          <h1 class="hero-title">
+            Slow &amp; Sweet: <span class="accent">Alan &amp; Eleanor’s</span> Field Guide to Us 🐌🌸🐢
+          </h1>
+
+          <p class="hero-subtitle">
+            Our interactive storybook scrapbook of sushi dates, sakura trails, turquoise ocean horizons, and every little thing I love about you.
+          </p>
+
+          <div class="hero-stats">
+            <a href="#memories" class="stat-box btn-squishy">
+              <div id="stat-completed" class="stat-num">0</div>
+              <div class="stat-label">Completed Dates</div>
+            </a>
+            <a href="#elles-menu" class="stat-box teal btn-squishy">
+              <div id="stat-to-try" class="stat-num">0</div>
+              <div class="stat-label">Places to Try</div>
+            </a>
+            <a href="#scrapbook" class="stat-box btn-squishy">
+              <div id="stat-quests" class="stat-num">1/4</div>
+              <div class="stat-label">Shared Quests</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Bubu, Dudu, Eleanor Snail & Alan Turtle Illustration -->
+        <div class="hero-art-box mascot-wiggle" data-action="tap-mascot" title="Tap Bubu, Dudu, Eleanor & Alan!">
+          <svg viewBox="0 0 360 275" width="310" height="236" role="img" aria-label="Bubu and Dudu under sakura and peonies with Eleanor Snail and Alan Turtle">
+            <defs>
+              <linearGradient id="lagoonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#9EEFE8" />
+                <stop offset="50%" stop-color="#2EC4B6" />
+                <stop offset="100%" stop-color="#1D9B8F" />
+              </linearGradient>
+            </defs>
+
+            <!-- Shoreline & Turquoise Ocean -->
+            <ellipse cx="180" cy="236" rx="156" ry="18" fill="#FFE4EC" />
+            <path d="M18,242 Q95,230 180,240 T342,238 L342,268 Q180,275 18,268 Z" fill="url(#lagoonGrad)" opacity="0.92" />
+            <path d="M52,250 Q115,244 175,250 T308,248" stroke="#FFFFFF" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.82" />
+
+            <!-- Cherry Blossom & Peony Branch -->
+            <path d="M16,30 Q115,14 195,36 Q275,16 345,32" stroke="#8C6239" stroke-width="4" fill="none" stroke-linecap="round" />
+            <circle cx="56" cy="24" r="11" fill="#FADADD" />
+            <circle cx="56" cy="24" r="4" fill="#FF5C93" />
+            <circle cx="122" cy="20" r="13" fill="#FF5C93" opacity="0.85" />
+            <circle cx="122" cy="20" r="5" fill="#FFF" />
+            <circle cx="242" cy="22" r="13" fill="#FADADD" />
+            <circle cx="242" cy="22" r="5" fill="#FF5C93" />
+            <circle cx="305" cy="26" r="11" fill="#FF5C93" opacity="0.85" />
+            <circle cx="305" cy="26" r="4" fill="#FFF" />
+
+            <!-- Center Heart -->
+            <path d="M180,44 C175,37 166,40 166,47 C166,54 180,62 180,62 C180,62 194,54 194,47 C194,40 185,37 180,44 Z" fill="#FF5C93" />
+
+            <!-- DUDU (Left Brown Bear) -->
+            <g transform="translate(74, 84)">
+              <circle cx="22" cy="18" r="14" fill="#8C6239" stroke="#363338" stroke-width="2.5" />
+              <circle cx="78" cy="18" r="14" fill="#8C6239" stroke="#363338" stroke-width="2.5" />
+              <ellipse cx="50" cy="108" rx="38" ry="34" fill="#8C6239" stroke="#363338" stroke-width="2.5" />
+              <ellipse cx="50" cy="54" rx="44" ry="38" fill="#8C6239" stroke="#363338" stroke-width="2.5" />
+              <ellipse cx="50" cy="63" rx="16" ry="12" fill="#F5E6D3" />
+              <circle cx="34" cy="52" r="4" fill="#363338" />
+              <circle cx="66" cy="52" r="4" fill="#363338" />
+              <ellipse cx="50" cy="59" rx="4.5" ry="3" fill="#363338" />
+              <path d="M44,65 Q50,71 56,65" stroke="#363338" stroke-width="2.3" fill="none" stroke-linecap="round" />
+              <ellipse cx="26" cy="60" rx="6.5" ry="3.8" fill="#FF5C93" opacity="0.8" />
+              <ellipse cx="74" cy="60" rx="6.5" ry="3.8" fill="#FF5C93" opacity="0.8" />
+            </g>
+
+            <!-- BUBU (Right White Bear with Peony Pin) -->
+            <g transform="translate(176, 88)">
+              <circle cx="22" cy="18" r="13" fill="#FFFFFF" stroke="#363338" stroke-width="2.5" />
+              <circle cx="76" cy="18" r="13" fill="#FFFFFF" stroke="#363338" stroke-width="2.5" />
+              <ellipse cx="49" cy="105" rx="36" ry="32" fill="#FFFFFF" stroke="#363338" stroke-width="2.5" />
+              <ellipse cx="49" cy="52" rx="42" ry="36" fill="#FFFFFF" stroke="#363338" stroke-width="2.5" />
+              <circle cx="74" cy="22" r="9" fill="#FF5C93" />
+              <circle cx="74" cy="22" r="4" fill="#FADADD" />
+              <path d="M29,49 Q34,43 39,49" stroke="#363338" stroke-width="2.6" fill="none" stroke-linecap="round" />
+              <path d="M59,49 Q64,43 69,49" stroke="#363338" stroke-width="2.6" fill="none" stroke-linecap="round" />
+              <ellipse cx="49" cy="56" rx="4" ry="2.8" fill="#363338" />
+              <path d="M44,62 Q49,68 54,62" stroke="#363338" stroke-width="2.3" fill="none" stroke-linecap="round" />
+              <ellipse cx="24" cy="57" rx="7" ry="4" fill="#FF5C93" opacity="0.85" />
+              <ellipse cx="74" cy="57" rx="7" ry="4" fill="#FF5C93" opacity="0.85" />
+            </g>
+
+            <!-- Eleanor the Snail -->
+            <g transform="translate(22, 202)">
+              <path d="M4,34 Q24,36 44,32 Q48,26 42,24 Q36,24 34,29 L8,29 Q2,30 4,34 Z" fill="#FADADD" stroke="#363338" stroke-width="2" />
+              <circle cx="22" cy="20" r="13" fill="#FF5C93" stroke="#363338" stroke-width="2" />
+              <path d="M22,20 m-6,0 a6,6 0 1,0 12,0 a4,4 0 1,0 -8,0" fill="none" stroke="#FFF" stroke-width="2" />
+            </g>
+
+            <!-- Alan the Turtle -->
+            <g transform="translate(292, 208)">
+              <ellipse cx="10" cy="24" rx="5" ry="3.5" fill="#9EEFE8" stroke="#363338" stroke-width="1.8" />
+              <ellipse cx="30" cy="24" rx="5" ry="3.5" fill="#9EEFE8" stroke="#363338" stroke-width="1.8" />
+              <circle cx="4" cy="17" r="6.5" fill="#9EEFE8" stroke="#363338" stroke-width="2" />
+              <path d="M10,21 A15,13 0 0,1 40,21 Z" fill="#2EC4B6" stroke="#363338" stroke-width="2" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Animated Dual-Layer Turquoise Ocean Waves -->
+      <div class="hero-waves" aria-hidden="true">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none" style="width: 106%; margin-left: -3%; height: 100%;" class="wave-drift-slow">
+          <path d="M0,22 C200,48 400,2 600,24 C800,46 1000,6 1200,22 L1200,60 L0,60 Z" fill="#9EEFE8" opacity="0.75" />
+        </svg>
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none" style="width: 106%; margin-left: -3%; height: 42px; position: absolute; bottom: 0; left: 0;" class="wave-drift-fast">
+          <path d="M0,28 C220,6 420,46 640,24 C860,2 1040,42 1200,26 L1200,60 L0,60 Z" fill="#2EC4B6" opacity="0.58" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 1: OUR STORY (SNAIL & TURTLE LOVE STORY)
+    ========================================================================= -->
+    <section id="our-story" class="card-panel">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow-pill eyebrow-pink">📖 Storybook Chapters</span>
+          <h2 class="section-title">Snail &amp; Turtle Love Story <span style="color: var(--sakura-deep);">🐌 ❤️ 🐢</span></h2>
+        </div>
+
+        <div class="pill-row" id="chapter-tabs">
+          <button type="button" data-action="set-chapter" data-id="0" class="filter-pill active-pink btn-squishy">Ch. 1</button>
+          <button type="button" data-action="set-chapter" data-id="1" class="filter-pill btn-squishy">Ch. 2</button>
+          <button type="button" data-action="set-chapter" data-id="2" class="filter-pill btn-squishy">Ch. 3</button>
+          <button type="button" data-action="set-chapter" data-id="3" class="filter-pill btn-squishy">Ch. 4</button>
+        </div>
+      </div>
+
+      <div class="story-stage">
+        <div id="story-art" class="story-art-frame"></div>
+        <div>
+          <div class="story-meta">
+            <span id="story-badge" class="story-chapter-num">Chapter 1 of 4</span>
+            <span id="story-emoji" style="font-size: 1.4rem;">🌸</span>
+          </div>
+          <h3 id="story-title" style="font-size: 1.4rem;">Slow &amp; Steady Hearts</h3>
+          <p id="story-text" class="story-text"></p>
+          <div id="story-quote" class="story-quote"></div>
+          <div class="story-nav-btns">
+            <button type="button" data-action="prev-chapter" class="btn-secondary btn-squishy">← Prev</button>
+            <button type="button" data-action="next-chapter" class="btn-primary-pink btn-squishy">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Shoreline Slider -->
+      <div class="shoreline-box">
+        <div class="shoreline-top">
+          <span>💕 Slide to bring Eleanor &amp; Alan together where cherry blossoms meet turquoise waters:</span>
+          <button type="button" data-action="meet-in-middle" class="btn-gradient-love btn-squishy">💖 Meet in the Middle!</button>
+        </div>
+
+        <div class="shoreline-track">
+          <svg viewBox="0 0 800 32" preserveAspectRatio="none" class="shoreline-waves">
+            <path d="M0,12 Q100,2 200,12 T400,12 T600,12 T800,12 L800,32 L0,32 Z" fill="#2EC4B6" opacity="0.5" />
+            <path d="M0,18 Q120,10 240,18 T480,18 T720,18 T800,16 L800,32 L0,32 Z" fill="#1D9B8F" opacity="0.62" />
+          </svg>
+          <div id="center-heart" class="center-heart">🌸</div>
+          <div id="snail-walker" class="walker-badge" style="left: 6%;">
+            <span style="font-size: 1.75rem; display: inline-block; transform: scaleX(-1);">🐌</span>
+            <span class="walker-name">Eleanor</span>
+          </div>
+          <div id="turtle-walker" class="walker-badge" style="right: 6%;">
+            <span class="walker-name alan">Alan</span>
+            <span style="font-size: 1.75rem;">🐢</span>
+          </div>
+        </div>
+
+        <input id="shoreline-slider" type="range" min="0" max="100" value="15" class="love-slider" aria-label="Move Snail and Turtle closer together" />
+
+        <div id="reunion-banner" class="reunion-banner hidden">
+          🎉 Eleanor &amp; Alan met in the middle where sakura petals meet turquoise waters! 🐌❤️🐢🌸🌊
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 2: DATES WE'VE BEEN ON (MEMORY LANE)
+    ========================================================================= -->
+    <section id="memories">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow-pill eyebrow-pink">✨ Memory Lane</span>
+          <h2 class="section-title">Dates We’ve Been On ✨</h2>
+          <p class="section-sub">Every outing, restaurant, trip, and cozy game night we’ve checked off together.</p>
+        </div>
+        <span id="memories-count-pill" class="eyebrow-pill eyebrow-teal" style="font-size: 0.78rem; padding: 6px 14px;">0 Memories 💖</span>
+      </div>
+
+      <div class="toolbar-card">
+        <div class="pill-row" id="memories-filter-row">
+          <button type="button" data-action="filter-memories" data-id="all" class="filter-pill active-teal btn-squishy">✨ All</button>
+          <button type="button" data-action="filter-memories" data-id="outings" class="filter-pill btn-squishy">🏞️ Outings &amp; Travel</button>
+          <button type="button" data-action="filter-memories" data-id="food" class="filter-pill btn-squishy">🍣 Restaurants &amp; Eats</button>
+          <button type="button" data-action="filter-memories" data-id="cozy" class="filter-pill teal-outline btn-squishy">🎮 Cozy &amp; Games</button>
+        </div>
+
+        <form id="add-memory-form" class="inline-form">
+          <input id="new-memory-input" type="text" placeholder="Log a new date we went on..." class="cute-input" />
+          <button type="submit" class="btn-primary-pink btn-squishy" style="white-space: nowrap;">+ Log Date</button>
+        </form>
+      </div>
+
+      <div id="memories-grid" class="memories-grid"></div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 3: ELLE'S MENU & NYC FOOD GUIDE
+    ========================================================================= -->
+    <section id="elles-menu" class="card-panel">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow-pill eyebrow-teal">🐟 Pescatarian Diet</span>
+          <h2 class="section-title">Elle’s Menu &amp; NYC Food Guide 🍣</h2>
+        </div>
+      </div>
+
+      <!-- Handle With Care Alert Box -->
+      <div class="alert-card">
+        <div data-action="tap-mascot" class="alert-mascot mascot-wiggle" title="Strict No-Fly Zone!">
+          <svg viewBox="0 0 110 80" width="94" height="68" aria-label="Handle With Care">
+            <circle cx="22" cy="18" r="7" fill="#FFFFFF" stroke="#363338" stroke-width="2" />
+            <circle cx="50" cy="18" r="7" fill="#FFFFFF" stroke="#363338" stroke-width="2" />
+            <ellipse cx="36" cy="38" rx="22" ry="18" fill="#FFFFFF" stroke="#363338" stroke-width="2" />
+            <path d="M24,33 L30,37 L24,41 M48,33 L42,37 L48,41" stroke="#363338" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <path d="M30,47 Q36,43 42,47" stroke="#363338" stroke-width="2" fill="none" />
+            <rect x="66" y="20" width="34" height="34" rx="9" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.3" />
+            <path d="M75,29 L91,45 M91,29 L75,45" stroke="#E11D48" stroke-width="3.2" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <div class="alert-subbox">
+          <div class="alert-heading">🚫 Strict Food Dislikes</div>
+          <div class="chip-wrap">
+            <span class="warn-chip">No Chutoro</span>
+            <span class="warn-chip">No Wagyu</span>
+            <span class="warn-chip">No Ikura</span>
+            <span class="warn-chip">No Uni</span>
+          </div>
+        </div>
+
+        <div class="alert-subbox amber">
+          <div class="alert-heading">⚡ Sensory &amp; Environment Dislikes</div>
+          <div class="chip-wrap">
+            <span class="warn-chip amber">🚭 Smoke</span>
+            <span class="warn-chip amber">🔊 Loud Noise</span>
+            <span class="warn-chip amber">☀️ Harsh Sunlight</span>
+            <span class="warn-chip amber">👟 Soggy Shoes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Cravings Filter -->
+      <div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
+          <h3 style="font-size: 1.2rem;">🍱 Core Cravings</h3>
+          <div class="pill-row" id="cravings-filter-row">
+            <button type="button" data-action="filter-cravings" data-id="all" class="filter-pill active-pink btn-squishy">All (16)</button>
+            <button type="button" data-action="filter-cravings" data-id="japanese" class="filter-pill btn-squishy">🇯🇵 Japanese</button>
+            <button type="button" data-action="filter-cravings" data-id="chinese" class="filter-pill btn-squishy">🇨🇳 Chinese</button>
+            <button type="button" data-action="filter-cravings" data-id="thai" class="filter-pill btn-squishy">🇹🇭 Thai &amp; Flavors</button>
+          </div>
+        </div>
+        <div id="cravings-grid" class="cravings-grid"></div>
+      </div>
+
+      <!-- Go-To Spots & Freebies Unlocked -->
+      <div class="two-col-grid">
+        <div style="background: #F7FDFC; border: 1.5px solid var(--turquoise-light); border-radius: 20px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.1rem;">⭐ Go-To Spots</h3>
+            <span class="eyebrow-pill eyebrow-teal" style="margin: 0;">5 Favorites</span>
+          </div>
+          <div id="goto-list"></div>
+        </div>
+
+        <div style="background: #FFF8FA; border: 1.5px solid var(--sakura-light); border-radius: 20px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="font-size: 1.1rem;">🎁 Freebies Unlocked</h3>
+            <span class="eyebrow-pill eyebrow-pink" style="margin: 0;">8 Wins!</span>
+          </div>
+          <div id="freebies-grid" class="freebies-grid"></div>
+        </div>
+      </div>
+
+      <!-- Searchable Checkable Directories: Special Restaurants (63) & Food & Bakeries (60) -->
+      <div style="border-top: 1.5px solid var(--sakura-light); padding-top: 20px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div class="pill-row">
+            <button type="button" id="tab-btn-restaurants" data-action="switch-dir" data-id="restaurants" class="filter-pill active-pink btn-squishy">
+              🍽️ Special Restaurants (<span id="rest-counter">17/63</span>)
+            </button>
+            <button type="button" id="tab-btn-bakeries" data-action="switch-dir" data-id="bakeries" class="filter-pill btn-squishy">
+              🥐 Food &amp; Bakeries to Try (<span id="bakery-counter">4/60</span>)
+            </button>
+          </div>
+
+          <button type="button" id="dir-hide-btn" data-action="toggle-dir-hide" class="filter-pill btn-squishy">
+            👁️ Hide Checked: Off
+          </button>
+        </div>
+
+        <input id="dir-search" type="text" placeholder="🔍 Search restaurants, bakeries, sushi, Thai, bagels..." class="cute-input" />
+
+        <div id="dir-list-grid" class="dir-grid"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 4: DATE SPINNER & ADVENTURES
+    ========================================================================= -->
+    <section id="dates-adventures" class="card-panel">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow-pill eyebrow-pink">🎡 Side Quests</span>
+          <h2 class="section-title">Date Spinner &amp; Adventures 🎡</h2>
+        </div>
+
+        <button type="button" id="quests-hide-btn" data-action="toggle-quests-hide" class="filter-pill btn-squishy">
+          👁️ Hide Checked: Off
+        </button>
+      </div>
+
+      <!-- Date Night Slot Machine -->
+      <div class="spinner-box">
+        <div class="pill-row" id="spin-vibe-row">
+          <button type="button" data-action="set-spin-vibe" data-id="all" class="filter-pill active-pink btn-squishy">✨ Any Vibe</button>
+          <button type="button" data-action="set-spin-vibe" data-id="daytrip" class="filter-pill btn-squishy">🏞️ Day Trip</button>
+          <button type="button" data-action="set-spin-vibe" data-id="special" class="filter-pill btn-squishy">⭐ Special Outing</button>
+          <button type="button" data-action="set-spin-vibe" data-id="todo" class="filter-pill btn-squishy">✅ Cozy &amp; Active</button>
+        </div>
+
+        <div class="slot-display">
+          <div id="slot-emoji" class="slot-emoji">🌸</div>
+          <div id="slot-title" class="slot-title">Ladurée SoHo Outdoor Cherry Blossom Patio Afternoon Tea</div>
+          <div id="slot-tag" class="slot-tag">Day Trip • Uncompleted</div>
+        </div>
+
+        <button type="button" data-action="spin-date" class="btn-spin-big btn-squishy">🎲 Spin Our Next Date!</button>
+      </div>
+
+      <!-- Checkable Accordions: Day Trips (23), Special Outings (13), Things To Do (17) -->
+      <details open class="quest-accordion">
+        <summary>
+          <span>🏞️ Day Trips <span id="daytrip-badge" class="quest-count-pill">7/23</span></span>
+          <span style="font-size: 0.78rem; color: var(--charcoal-muted);">▼</span>
+        </summary>
+        <div id="daytrips-grid" class="quest-items-grid"></div>
+      </details>
+
+      <details class="quest-accordion">
+        <summary>
+          <span>⭐ Special Outings <span id="special-badge" class="quest-count-pill">5/13</span></span>
+          <span style="font-size: 0.78rem; color: var(--charcoal-muted);">▼</span>
+        </summary>
+        <div id="special-grid" class="quest-items-grid"></div>
+      </details>
+
+      <details class="quest-accordion" style="margin-bottom: 0;">
+        <summary>
+          <span>✅ Things To Do <span id="todo-badge" class="quest-count-pill">7/17</span></span>
+          <span style="font-size: 0.78rem; color: var(--charcoal-muted);">▼</span>
+        </summary>
+        <div id="todo-grid" class="quest-items-grid"></div>
+      </details>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 5: TRAVEL & HIKES
+    ========================================================================= -->
+    <section id="travel-hikes" class="card-panel">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow-pill eyebrow-teal">✈️ Horizons &amp; Trails</span>
+          <h2 class="section-title">Travel &amp; Hikes ✈️</h2>
+        </div>
+      </div>
+
+      <!-- Regional Getaways: NH Hikes, Boston, Cape Cod -->
+      <div class="three-col-grid">
+        <div class="region-card">
+          <h3 style="font-size: 1.08rem; margin-bottom: 4px;">⛰️ New Hampshire Hikes</h3>
+          <div id="nh-list" style="display: flex; flex-direction: column; gap: 7px;"></div>
+        </div>
+        <div class="region-card">
+          <h3 style="font-size: 1.08rem; margin-bottom: 4px;">🦞 Boston</h3>
+          <div id="boston-list" style="display: flex; flex-direction: column; gap: 7px;"></div>
+        </div>
+        <div class="region-card">
+          <h3 style="font-size: 1.08rem; margin-bottom: 4px;">🏖️ Cape Cod</h3>
+          <div id="capecod-list" style="display: flex; flex-direction: column; gap: 7px;"></div>
+        </div>
+      </div>
+
+      <!-- 18 World Destinations (No Max 6 Days banner or badges) -->
+      <div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
+          <h3 style="font-size: 1.2rem;">🌍 World Destinations Wishlist (18)</h3>
+          <div class="pill-row" id="world-filter-row">
+            <button type="button" data-action="filter-world" data-id="all" class="filter-pill active-teal btn-squishy">All (18)</button>
+            <button type="button" data-action="filter-world" data-id="asia" class="filter-pill teal-outline btn-squishy">🏯 Asia &amp; Oceania</button>
+            <button type="button" data-action="filter-world" data-id="europe" class="filter-pill teal-outline btn-squishy">🏰 Europe</button>
+            <button type="button" data-action="filter-world" data-id="americas" class="filter-pill teal-outline btn-squishy">🏔️ Americas &amp; Africa</button>
+          </div>
+        </div>
+        <div id="world-grid" class="world-grid"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 6: SCRAPBOOK & SHARED GOALS
+    ========================================================================= -->
+    <section id="scrapbook" class="card-panel">
+      <div class="section-header">
+        <div>
+          <span class="eyebrow-pill eyebrow-pink">📸 Polaroids &amp; Milestones</span>
+          <h2 class="section-title">Scrapbook &amp; Shared Goals 📸</h2>
+        </div>
+      </div>
+
+      <!-- Shared Bucket-List Goals -->
+      <div style="background: #FFF8FA; border: 1.5px solid var(--sakura-light); border-radius: 20px; padding: 18px; margin-bottom: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="font-size: 1.15rem;">📝 Shared Bucket-List Goals</h3>
+          <span style="font-size: 0.74rem; font-weight: 800; color: var(--sakura-deep);">Tap to check off</span>
+        </div>
+        <div id="goals-grid" class="goals-grid"></div>
+      </div>
+
+      <!-- Filterable & Flip-able Polaroids -->
+      <div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;">
+          <h3 style="font-size: 1.15rem;">📌 What I Love &amp; Appreciate About Elle (Tap Any Card to Flip!)</h3>
+          <div class="pill-row" id="scrap-filter-row">
+            <button type="button" data-action="filter-scrap" data-id="all" class="filter-pill active-pink btn-squishy">All (16)</button>
+            <button type="button" data-action="filter-scrap" data-id="traits" class="filter-pill btn-squishy">💖 Who She Is (8)</button>
+            <button type="button" data-action="filter-scrap" data-id="memories" class="filter-pill btn-squishy">🎮 Sweet Memories (8)</button>
+          </div>
+        </div>
+        <div id="polaroid-grid" class="polaroid-grid"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 7: SECRET KEEPSAKE VAULT
+    ========================================================================= -->
+    <section id="vault">
+      <!-- Locked State -->
+      <div id="vault-locked-view" class="vault-locked">
+        <div class="envelope-flap"></div>
+        <div style="position: relative; z-index: 2;">
+          <span class="eyebrow-pill eyebrow-pink">🔒 Private Keepsake Vault • Eleanor &amp; Alan 🐌 🐢</span>
+          <h2 class="section-title" style="margin-top: 6px;">The Secret Envelope 💌</h2>
+          <p class="section-sub" style="max-width: 440px; margin: 6px auto 14px;">
+            Contains our mutual relationship goals, my definition of love, future kids’ names, and secret gift vault.
+          </p>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <button type="button" data-action="open-vault-modal" class="wax-seal-btn btn-squishy">
+              <span style="font-size: 1.55rem; line-height: 1;">💌</span>
+              <span style="font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px;">Unlock</span>
+            </button>
+
+            <button type="button" data-action="peek-vault" class="btn-secondary btn-squishy" style="border-radius: 999px; color: var(--sakura-deep);">
+              ✨ Peek Inside
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unlocked State -->
+      <div id="vault-unlocked-view" class="hidden">
+        <div class="vault-unlocked-bar">
+          <span>🔓 Secret Keepsake Vault Unlocked — Eleanor &amp; Alan 🐌 ❤️ 🐢</span>
+          <button type="button" data-action="lock-vault" class="btn-secondary btn-squishy" style="border-radius: 999px;">🔒 Lock Vault</button>
+        </div>
+
+        <!-- Mutual Relationship Goals -->
+        <div class="card-panel" style="margin-bottom: 18px;">
+          <h3 style="font-size: 1.25rem; margin-bottom: 14px;">🤝 Mutual Relationship Goals</h3>
+          <div class="two-col-grid" style="margin: 0;">
+            <div class="mutual-box alan">
+              <h4 style="font-size: 1.05rem;">🐢 Alan’s Goals</h4>
+              <ol class="mutual-list">
+                <li>More thoughtful gestures thinking of Elle.</li>
+                <li>Treat special days with care and intention.</li>
+                <li>Sleep at Elle’s place more.</li>
+                <li>Buy the costume, set the mood. Brainstorm more. Blindfolds. Lotion. Complimenting fest.</li>
+              </ol>
+            </div>
+            <div class="mutual-box">
+              <h4 style="font-size: 1.05rem;">🐌 Elle’s Goals</h4>
+              <ol class="mutual-list">
+                <li>No comparison to other relationships.</li>
+                <li>Focus more on positive traits.</li>
+                <li>Don’t bring up second ex staying for intimacy sex reasons.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Definition of Love, Future Kids' Names & Gift Vault -->
+        <div class="three-col-grid" style="margin-bottom: 0;">
+          <div class="region-card">
+            <h3 style="font-size: 1.1rem;">💕 Definition of Love</h3>
+            <div class="love-def-item">1. When you put their happiness above your own.</div>
+            <div class="love-def-item">2. When you wanna be with them always.</div>
+            <div class="love-def-item">3. When you worry about them and care for their well-being.</div>
+          </div>
+
+          <div class="region-card" style="border-color: var(--turquoise-light);">
+            <h3 style="font-size: 1.1rem;">👶 Future Kids’ Names</h3>
+            <div>
+              <div style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--turquoise-deep); margin-top: 4px;">Boys</div>
+              <div>
+                <span class="name-chip">Elliot</span>
+                <span class="name-chip">Theodore</span>
+                <span class="name-chip">Oliver</span>
+                <span class="name-chip">Eric</span>
+                <span class="name-chip">Orion</span>
+              </div>
+            </div>
+            <div style="margin-top: 8px;">
+              <div style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: var(--sakura-deep);">Girls</div>
+              <div>
+                <span class="name-chip girl">Ella</span>
+                <span class="name-chip girl">Mia</span>
+                <span class="name-chip girl">Evelyn</span>
+                <span class="name-chip girl">Alexandra</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="region-card" style="justify-content: space-between;">
+            <div>
+              <h3 style="font-size: 1.1rem; margin-bottom: 10px;">🎁 Gift Vault</h3>
+              <div id="gift-list" style="display: flex; flex-direction: column; gap: 7px;"></div>
+            </div>
+            <form id="add-gift-form" style="display: flex; gap: 6px; margin-top: 12px;">
+              <input id="new-gift-input" type="text" placeholder="Add gift idea..." class="cute-input" />
+              <button type="submit" class="btn-primary-pink btn-squishy" style="white-space: nowrap;">+ Add</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <span>Slow &amp; Sweet: Alan &amp; Eleanor’s Field Guide to Us 🐌🌸🐢</span>
+      <button type="button" data-action="reset-progress" class="reset-link">Reset Saved Progress</button>
+    </footer>
+  </main>
+
+  <!-- =========================================================================
+       PASSCODE MODAL
+  ========================================================================= -->
+  <div id="vault-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div style="font-size: 2.3rem;">💌</div>
+      <h3 id="modal-title" style="font-size: 1.4rem;">Enter Keepsake Passcode</h3>
+      <p style="font-size: 0.8rem; font-weight: 600; color: var(--charcoal-muted);">
+        Enter <strong style="color: var(--sakura-deep);">1010</strong> or <strong style="color: var(--sakura-deep);">0423</strong> (or tap Peek Inside).
+      </p>
+      <input id="passcode-input" type="password" inputmode="numeric" maxlength="6" placeholder="••••" class="passcode-input" />
+      <p id="passcode-error" class="hidden" style="font-size: 0.76rem; font-weight: 800; color: #E11D48;">
+        Oops! Try 1010, 0423, or tap Peek Inside ✨
+      </p>
+      <div style="display: flex; justify-content: center; gap: 8px; margin-top: 4px;">
+        <button type="button" data-action="close-vault-modal" class="btn-secondary btn-squishy">Cancel</button>
+        <button type="button" data-action="submit-passcode" class="btn-primary-pink btn-squishy">Unlock 🔓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       FLOATING BOTTOM-RIGHT BACK-TO-TOP & BUBU + DUDU BUDDY
+  ========================================================================= -->
+  <div class="floating-dock">
+    <div id="mascot-bubble" class="mascot-bubble">
+      “Tap Bubu &amp; Dudu for a sweet note! 🐌🌸🐢”
+    </div>
+
+    <button type="button" id="top-btn" data-action="scroll-top" class="top-btn btn-squishy hidden">↑ Top</button>
+
+    <button type="button" data-action="tap-corner-mascot" class="corner-mascot-btn mascot-wiggle" title="Tap Bubu & Dudu!">
+      <svg viewBox="0 0 80 65" width="42" height="36" aria-label="Bubu and Dudu">
+        <circle cx="15" cy="18" r="6" fill="#8C6239" stroke="#363338" stroke-width="1.8" />
+        <circle cx="37" cy="18" r="6" fill="#8C6239" stroke="#363338" stroke-width="1.8" />
+        <ellipse cx="26" cy="34" rx="16" ry="14" fill="#8C6239" stroke="#363338" stroke-width="1.8" />
+        <circle cx="21" cy="32" r="2" fill="#363338" />
+        <circle cx="31" cy="32" r="2" fill="#363338" />
+        <circle cx="43" cy="19" r="6" fill="#FFFFFF" stroke="#363338" stroke-width="1.8" />
+        <circle cx="65" cy="19" r="6" fill="#FFFFFF" stroke="#363338" stroke-width="1.8" />
+        <ellipse cx="54" cy="35" rx="16" ry="14" fill="#FFFFFF" stroke="#363338" stroke-width="1.8" />
+        <path d="M47,33 Q49,30 51,33 M57,33 Q59,30 61,33" stroke="#363338" stroke-width="1.8" fill="none" />
+        <path d="M40,12 C38,9 34,10 34,13 C34,16 40,20 40,20 C40,20 46,16 46,13 C46,10 42,9 40,12 Z" fill="#FF5C93" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       SELF-CONTAINED VANILLA JAVASCRIPT (AUDITED & BUG-FREE)
+  ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      var STORAGE_KEY = 'elle_almanac_v12';
+
+      function escapeHTML(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function safeLoad() {
+        try {
+          if (!window.localStorage) return null;
+          var raw = window.localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          var parsed = JSON.parse(raw);
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function safeSave(data) {
+        try {
+          if (!window.localStorage) return;
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {
+          // Ignore storage restrictions in sandboxed environments
+        }
+      }
+
+      function safeClear() {
+        try {
+          if (window.localStorage) {
+            window.localStorage.removeItem(STORAGE_KEY);
+          }
+        } catch (e) {
+          // Ignore
+        }
+      }
+
+      /* -----------------------------------------------------------------------
+         DATA SETS
+      ----------------------------------------------------------------------- */
+      var DEFAULT_RESTAURANTS = [
+        // 17 pre-checked [x] (Nori Shinn excluded)
+        { name: 'Mokyo', done: true },
+        { name: 'Konya', done: true },
+        { name: 'Golden Unicorn', done: true },
+        { name: 'Yume Ga Arukara', done: true },
+        { name: 'Oyishi Sushi UES', done: true },
+        { name: 'Saiguette', done: true },
+        { name: 'Sendo', done: true },
+        { name: 'Sugarfish', done: true },
+        { name: 'Sea by Junsik', done: true },
+        { name: 'August Gatherings', done: true },
+        { name: 'Sappiesan', done: true },
+        { name: 'Sukh', done: true },
+        { name: 'Cull and Pistol HH', done: true },
+        { name: 'S&P Diner', done: true },
+        { name: 'Ping', done: true },
+        { name: 'Odre', done: true },
+        { name: 'Don Udon', done: true },
+        // 46 unchecked [ ] = 63 total
+        { name: 'Don Angie', done: false },
+        { name: 'Torrisi', done: false },
+        { name: 'Mariscos Submarino', done: false },
+        { name: 'MAKI 19 Bogart St Unit 1, Brooklyn, NY 11206', done: false },
+        { name: 'Tachi Sushi', done: false },
+        { name: 'Chinese Tuxedo', done: false },
+        { name: 'Bánh', done: false },
+        { name: 'Wenwen', done: false },
+        { name: 'Umiya', done: false },
+        { name: 'Akino', done: false },
+        { name: 'Chiko', done: false },
+        { name: 'Saigon Vietnamese Sandwich Deli', done: false },
+        { name: 'Zest Sushi Happy Hour', done: false },
+        { name: 'Mari.ne Handrolls', done: false },
+        { name: 'Blue Peak Villa', done: false },
+        { name: 'Lisbonata', done: false },
+        { name: 'Phoenix Palace', done: false },
+        { name: 'Knori Handroll', done: false },
+        { name: 'Little Pine', done: false },
+        { name: 'Cocktail Omakase', done: false },
+        { name: 'Tsumo', done: false },
+        { name: 'Rule of Thirds - brunch', done: false },
+        { name: 'Brooklyn Farmacy & Soda', done: false },
+        { name: 'Shu Jiao Fu Zhou', done: false },
+        { name: '1915 Lanzhou Hand Pulled Noodles & Dumplings', done: false },
+        { name: 'Thai Diner', done: false },
+        { name: 'Saranrom Thai', done: false },
+        { name: 'Hug Esan', done: false },
+        { name: 'Sushi Saiko', done: false },
+        { name: 'Radio Bakery', done: false },
+        { name: 'Tall Poppy', done: false },
+        { name: 'Salt Bread Ko', done: false },
+        { name: 'Bahn Mi Saigon', done: false },
+        { name: 'Bánh Mì Cô Út 2', done: false },
+        { name: 'Ly Ly Vietnam Cookhouse', done: false },
+        { name: 'All Blues', done: false },
+        { name: 'Schmuck', done: false },
+        { name: 'Angels Share', done: false },
+        { name: 'Clemente Bar', done: false },
+        { name: 'Bemelmans Bar', done: false },
+        { name: 'Peoples Bar', done: false },
+        { name: 'Urban Backyard', done: false },
+        { name: 'Sanuki Udon', done: false },
+        { name: 'Mermaid Inn', done: false },
+        { name: 'Pure Thai Cook House', done: false },
+        { name: 'Rosella', done: false }
+      ];
+
+      var DEFAULT_BAKERIES = [
+        // 4 pre-checked [x] (Agis Counter, Chubby Skewers, Ando Patissier, Nori Shinn excluded)
+        { name: 'Konya NYC', done: true },
+        { name: '4Ps Pizza', done: true },
+        { name: 'Nami Nori', done: true },
+        { name: 'Don Udon', done: true },
+        // 56 unchecked [ ] = 60 total
+        { name: 'Towa', done: false },
+        { name: 'All Blues', done: false },
+        { name: 'Lei', done: false },
+        { name: 'Moonrise Bagels', done: false },
+        { name: "L'Appartement 4F", done: false },
+        { name: '929', done: false },
+        { name: '56709', done: false },
+        { name: 'Ume', done: false },
+        { name: 'Gaos Kebab', done: false },
+        { name: 'Yijishimo', done: false },
+        { name: 'Kuih Cafe', done: false },
+        { name: 'Ozakaya', done: false },
+        { name: 'Gai Kitchen', done: false },
+        { name: '1915 Lanzhou', done: false },
+        { name: 'Seoulbap', done: false },
+        { name: 'Umeko Sushi', done: false },
+        { name: 'Floating Mountain Tea House', done: false },
+        { name: 'Fromkora', done: false },
+        { name: 'Tenten', done: false },
+        { name: 'Bagel Joint', done: false },
+        { name: 'Red Gate Bakery', done: false },
+        { name: 'Cafe Ote', done: false },
+        { name: 'Chada', done: false },
+        { name: '1 Golden Pancake', done: false },
+        { name: 'Paloma Bakery', done: false },
+        { name: 'Jiaba Supper Club', done: false },
+        { name: 'Columns Wine Bar', done: false },
+        { name: 'Four Four South Village', done: false },
+        { name: 'Kora Bakery', done: false },
+        { name: "All'Antico Vinaio", done: false },
+        { name: 'Sunday Morning', done: false },
+        { name: 'Naks', done: false },
+        { name: 'Cheongsu', done: false },
+        { name: 'Alimama Tea', done: false },
+        { name: 'Million Bakery', done: false },
+        { name: 'Halihomebakes', done: false },
+        { name: 'Tawan', done: false },
+        { name: 'Kape T Torta', done: false },
+        { name: 'Son Del North', done: false },
+        { name: "Papa D'Amour", done: false },
+        { name: 'Lala Bake Shop', done: false },
+        { name: 'Duo Cafe', done: false },
+        { name: 'Sweet Graffiti', done: false },
+        { name: 'By Antidote', done: false },
+        { name: 'Lysee', done: false },
+        { name: 'From Lucie', done: false },
+        { name: 'The Pastry Box', done: false },
+        { name: "Sadelle's", done: false },
+        { name: 'Mary’s Irish Soda Bread', done: false },
+        { name: 'Rigor Hill Market', done: false },
+        { name: 'Nick and Sons Bakery', done: false },
+        { name: 'Al Sham Pastries', done: false },
+        { name: 'Laurel Bakery', done: false },
+        { name: 'Thea', done: false },
+        { name: 'Dominique Ansel', done: false },
+        { name: 'Justin’s Salt Bread', done: false },
+        { name: 'C as in Charlie', done: false }
+      ];
+
+      var DEFAULT_DAY_TRIPS = [
+        { title: 'Beacon', cat: 'daytrip', emoji: '🏔️', done: true },
+        { title: 'Cold Spring (autumn)', cat: 'daytrip', emoji: '🍂', done: true },
+        { title: 'Governors Island & biking', cat: 'daytrip', emoji: '🚲', done: true },
+        { title: 'Conservatory Garden', cat: 'daytrip', emoji: '🌷', done: true },
+        { title: 'Sake Bar Asoko', cat: 'daytrip', emoji: '🍶', done: true },
+        { title: 'Coney Island / Aquarium', cat: 'daytrip', emoji: '🐠', done: true },
+        { title: 'Bike ride @ Little Hell Gate Salt Marsh', cat: 'daytrip', emoji: '🌿', done: true },
+        { title: 'Grace Farms, New Canaan CT', cat: 'daytrip', emoji: '🏛️', done: false },
+        { title: 'Storm King Art Center / Woodbury Outlet', cat: 'daytrip', emoji: '🗿', done: false },
+        { title: 'Robert Moses State Park (beach)', cat: 'daytrip', emoji: '🏖️', done: false },
+        { title: 'Industry City / Japan Village', cat: 'daytrip', emoji: '🇯🇵', done: false },
+        { title: 'Bronx Zoo & Botanical Garden', cat: 'daytrip', emoji: '🌺', done: false },
+        { title: 'Staten Island Zoo', cat: 'daytrip', emoji: '🦦', done: false },
+        { title: 'Queens Zoo', cat: 'daytrip', emoji: '🦙', done: false },
+        { title: 'East Side River Bike', cat: 'daytrip', emoji: '🚴', done: false },
+        { title: 'New Jersey Trip Biking (Hamilton Park, Blvd East, Weehawken, Liberty State Park, Mitsuwa)', cat: 'daytrip', emoji: '🍙', done: false },
+        { title: 'American Dream Mall', cat: 'daytrip', emoji: '🛍️', done: false },
+        { title: 'Met Cloisters', cat: 'daytrip', emoji: '🏰', done: false },
+        { title: 'Central Park Boat Ride', cat: 'daytrip', emoji: '🚣', done: false },
+        { title: 'Harbor Cruise', cat: 'daytrip', emoji: '⛴️', done: false },
+        { title: 'Jazz Show at Bar', cat: 'daytrip', emoji: '🎷', done: false },
+        { title: 'Ladurée SoHo Outdoor Cherry Blossom Patio Afternoon Tea', cat: 'daytrip', emoji: '🌸', done: false },
+        { title: 'Cat Café Brooklyn', cat: 'daytrip', emoji: '🐱', done: false }
+      ];
+
+      var DEFAULT_SPECIAL_OUTINGS = [
+        { title: 'Picnic (spring/summer)', cat: 'special', emoji: '🧺', done: true },
+        { title: 'Flushing trip', cat: 'special', emoji: '🥟', done: true },
+        { title: 'Cherry blossoms (spring)', cat: 'special', emoji: '🌸', done: true },
+        { title: 'Chelsea gallery hop (Saturday)', cat: 'special', emoji: '🖼️', done: true },
+        { title: 'Bin Bin sake tasting', cat: 'special', emoji: '🍶', done: true },
+        { title: 'Ice skate (winter)', cat: 'special', emoji: '⛸️', done: false },
+        { title: 'Comedy show @ Comedy Cellar', cat: 'special', emoji: '🎤', done: false },
+        { title: 'Make pizza', cat: 'special', emoji: '🍕', done: false },
+        { title: 'Color Me Mine / pottery painting', cat: 'special', emoji: '🎨', done: false },
+        { title: 'Go on a short hike somewhere pretty', cat: 'special', emoji: '🥾', done: false },
+        { title: 'Central Park Zoo', cat: 'special', emoji: '🐧', done: false },
+        { title: 'Yayoi Infinity Lights @ Guggenheim', cat: 'special', emoji: '✨', done: false },
+        { title: 'Brooklyn Museum Iris van Herpen exhibit', cat: 'special', emoji: '👗', done: false }
+      ];
+
+      var DEFAULT_THINGS_TO_DO = [
+        { title: 'World Sake Day festival', cat: 'todo', emoji: '🍶', done: true },
+        { title: 'Remote watch party: The Love Hypothesis', cat: 'todo', emoji: '🎬', done: true },
+        { title: 'Baking', cat: 'todo', emoji: '🧁', done: true },
+        { title: 'Rooftop grill', cat: 'todo', emoji: '🔥', done: true },
+        { title: 'Pickleball', cat: 'todo', emoji: '🏓', done: true },
+        { title: 'Switch games: Mario Kart, Overcooked', cat: 'todo', emoji: '🎮', done: true },
+        { title: 'Mahjong', cat: 'todo', emoji: '🀄', done: true },
+        { title: 'Watch Rush Hour trilogy', cat: 'todo', emoji: '🍿', done: false },
+        { title: 'Make homemade dumplings together', cat: 'todo', emoji: '🥟', done: false },
+        { title: 'Tennis', cat: 'todo', emoji: '🎾', done: false },
+        { title: 'TV: Modern Family', cat: 'todo', emoji: '📺', done: false },
+        { title: 'Frisbee', cat: 'todo', emoji: '🥏', done: false },
+        { title: 'Cat Quest 3', cat: 'todo', emoji: '🐱', done: false },
+        { title: 'Terraria', cat: 'todo', emoji: '⛏️', done: false },
+        { title: 'Minecraft Dungeons', cat: 'todo', emoji: '🗡️', done: false },
+        { title: 'Essex Market', cat: 'todo', emoji: '🏮', done: false },
+        { title: 'Buy sashimi from Katagiri / LES Osakana and make our own sushi', cat: 'todo', emoji: '🍣', done: false }
+      ];
+
+      var DEFAULT_REGIONAL = {
+        nh: [
+          { title: 'Mount Major', done: false },
+          { title: 'Mount Morgan', done: false },
+          { title: 'Mount Cardigan', done: false },
+          { title: 'Farm', done: false }
+        ],
+        boston: [
+          { title: 'Charles River Esplanade', done: true },
+          { title: 'Yume Ga Arukara', done: true },
+          { title: 'Victorias Seafood', done: false },
+          { title: 'Tennis', done: false },
+          { title: 'Lake walk near house', done: false },
+          { title: 'Pho Viets', done: false }
+        ],
+        capecod: [
+          { title: 'Cape Cod', done: true },
+          { title: 'Lighthouse near Shining Seashore', done: true },
+          { title: 'Shining Seashore biking', done: true },
+          { title: 'Sam’s Seafood', done: true },
+          { title: 'Lobster boil', done: false },
+          { title: 'Woods Hole Aquarium', done: false },
+          { title: 'National Seashore Bikeway', done: false },
+          { title: 'Drive-in theater', done: false }
+        ]
+      };
+
+      var DEFAULT_GOALS = [
+        { title: 'Complete Cat Quest 2', emoji: '🐱', done: true },
+        { title: 'Hot girl summer lose 10 lbs 🔥👯‍♀️', emoji: '🔥', done: false },
+        { title: 'Get really good at pickleball to play on the challenger court and win a game', emoji: '🏓', done: false },
+        { title: 'Travel to another country together', emoji: '✈️', done: false }
+      ];
+
+      var DEFAULT_GIFTS = [
+        { text: 'This Website (Slow & Sweet Field Guide)', done: true }
+      ];
+
+      var CRAVINGS = [
+        { name: 'Sushi', cat: 'japanese', emoji: '🍣', note: 'Fresh fish — never chutoro, ikura, or uni' },
+        { name: 'Scallops', cat: 'japanese', emoji: '🐚', note: 'Sweet, tender seared or sashimi scallops' },
+        { name: 'Salmon', cat: 'japanese', emoji: '🐟', note: 'Always a top-tier sushi & dinner staple' },
+        { name: 'Udon', cat: 'japanese', emoji: '🍜', note: 'Thick, chewy noodles in warm savory broth' },
+        { name: 'Vermont Curry', cat: 'japanese', emoji: '🍛', note: 'Cozy comfort Japanese curry night' },
+        { name: 'Daikon Radish', cat: 'japanese', emoji: '🤍', note: 'Crisp, refreshing & simmered favorites' },
+        { name: 'Asian Pickles', cat: 'japanese', emoji: '🥒', note: 'Crunchy tangy sidekicks' },
+        { name: 'Sake', cat: 'japanese', emoji: '🍶', note: 'Best paired with probiotics for drinking nights!' },
+        { name: 'Tomato & Scrambled Eggs', cat: 'chinese', emoji: '🍅', note: 'Homestyle Chinese comfort classic (番茄炒蛋)' },
+        { name: 'Shredded Potato Stir-Fry (Tudou Si)', cat: 'chinese', emoji: '🥔', note: 'Crispy, savory & tangy potato sticks' },
+        { name: 'Tofu', cat: 'chinese', emoji: '🧊', note: 'Silky or crispy, always hits the spot' },
+        { name: 'Rice', cat: 'chinese', emoji: '🍚', note: 'Essential warm base for every meal' },
+        { name: 'Tom Yum', cat: 'thai', emoji: '🍲', note: 'Hot, sour & aromatic Thai broth' },
+        { name: 'Tomatoes', cat: 'thai', emoji: '🍅', note: 'Bright, juicy & umami-rich' },
+        { name: 'Citrus', cat: 'thai', emoji: '🍋', note: 'Yuzu, lime, lemon & bright zest' },
+        { name: 'Tangy Flavors', cat: 'thai', emoji: '✨', note: 'Zesty & lively flavor profiles' }
+      ];
+
+      var GOTO_SPOTS = [
+        { name: 'Sukidesu', vibe: 'Japanese Go-To', emoji: '🍣' },
+        { name: 'Los Tacos Mariscos', vibe: 'Fresh Seafood Tacos', emoji: '🌮' },
+        { name: 'Glin Thai Bistro', vibe: 'Tangy Thai Comfort', emoji: '🍲' },
+        { name: 'Rosella', vibe: 'Sustainable Sushi + Ice Cream', emoji: '🍨' },
+        { name: 'Sendo', vibe: 'Favorite Chirashi & Handrolls', emoji: '🥢' }
+      ];
+
+      var FREEBIES = [
+        { item: 'ARIARI hat', emoji: '🧢' },
+        { item: 'Thai iced tea from Sukh', emoji: '🧋' },
+        { item: 'Rosella ice cream + miso soup', emoji: '🍨' },
+        { item: 'Mojo hazelnut mousse', emoji: '🍫' },
+        { item: 'Sake from Oyishi Sushi', emoji: '🍶' },
+        { item: 'Sam’s Seafood lemonade', emoji: '🍋' },
+        { item: 'Zaatar croissant at Nick & Sons', emoji: '🥐' },
+        { item: 'Free bike found on Gov Island', emoji: '🚲' }
+      ];
+
+      var WORLD_DESTINATIONS = [
+        { name: 'Japan', region: 'asia', flag: '🇯🇵', note: 'Sakura spring mornings, sushi & sake' },
+        { name: 'Taiwan', region: 'asia', flag: '🇹🇼', note: 'Night markets, tea houses & coastal views' },
+        { name: 'Vietnam', region: 'asia', flag: '🇻🇳', note: 'Lantern towns, fresh herbs & turquoise bays' },
+        { name: 'Thailand / Phuket', region: 'asia', flag: '🇹🇭', note: 'Turquoise beaches & authentic tom yum' },
+        { name: 'Bali', region: 'asia', flag: '🇮🇩', note: 'Lush nature, peonies & ocean breezes' },
+        { name: 'China', region: 'asia', flag: '🇨🇳', note: 'Homestyle classics & scenic wonders' },
+        { name: 'Australia', region: 'asia', flag: '🇦🇺', note: 'Turquoise coastlines & cute wildlife' },
+        { name: 'New Zealand', region: 'asia', flag: '🇳🇿', note: 'Glacial turquoise lakes & scenic trails' },
+        { name: 'Netherlands', region: 'europe', flag: '🇳🇱', note: 'Canals, biking & flower gardens' },
+        { name: 'Sweden (PewDiePie)', region: 'europe', flag: '🇸🇪', note: 'Nordic nature & PewDiePie pilgrimage' },
+        { name: 'Switzerland', region: 'europe', flag: '🇨🇭', note: 'Scenic alpine trains & turquoise lakes' },
+        { name: 'Portugal', region: 'europe', flag: '🇵🇹', note: 'Fresh grilled seafood & Atlantic cliffs' },
+        { name: 'Ireland', region: 'europe', flag: '🇮🇪', note: 'Emerald hills & cozy coastal towns' },
+        { name: 'Banff', region: 'americas', flag: '🇨🇦', note: 'Iconic turquoise mountain lakes' },
+        { name: 'Alaska', region: 'americas', flag: '🇺🇸', note: 'Glaciers, wild salmon & crisp air' },
+        { name: 'Hawaii', region: 'americas', flag: '🌺', note: 'Tropical flowers, poke & turquoise waves' },
+        { name: 'Cabo', region: 'americas', flag: '🇲🇽', note: 'Sunlit ocean escape & coastal breezes' },
+        { name: 'South Africa', region: 'americas', flag: '🇿🇦', note: 'Dramatic coastlines & wildlife' }
+      ];
+
+      var SCRAPBOOK_CARDS = [
+        { type: 'traits', badge: '💖 Who She Is', text: 'So pretty and naturally expressive.' },
+        { type: 'traits', badge: '🌱 Grounded', text: 'Down-to-earth, frugal, and has reasonable expectations.' },
+        { type: 'traits', badge: '✨ Genuine', text: 'Innocent, sweet, and doesn’t carry dating baggage.' },
+        { type: 'traits', badge: '🏡 Roots', text: 'Comes from a happy family, has a job, and knows the struggle.' },
+        { type: 'traits', badge: '📵 Present', text: 'No social media — fully present in real life.' },
+        { type: 'traits', badge: '🤍 Safe Space', text: 'Lets me be 100% myself around her, and accepts me for who I am.' },
+        { type: 'traits', badge: '🗣️ Teamwork', text: 'Adaptive and genuinely great at conflict resolution & communication.' },
+        { type: 'traits', badge: '🎁 Humble', text: 'Doesn’t need lots of gifts to feel happy and loved.' },
+        { type: 'memories', badge: '💡 Sweet Memory', text: 'Brought a lightbulb over when I needed one most.' },
+        { type: 'memories', badge: '🚆 Travel Perk', text: 'Shared her Amtrak points for our weekend adventures.' },
+        { type: 'memories', badge: '🥂 Thoughtful', text: 'Brings probiotics for drinking nights.' },
+        { type: 'memories', badge: '🐱 Co-op', text: 'Our Cat Quest Switch playthroughs together.' },
+        { type: 'memories', badge: '🀄 Game Night', text: 'Playing Mahjong and pickleball side by side.' },
+        { type: 'memories', badge: '📺 Cozy Nights', text: 'Watching anime together on the couch.' },
+        { type: 'memories', badge: '🎂 Celebrations', text: 'The birthday cake, the cards, and the advent calendar.' },
+        { type: 'memories', badge: '💞 Mutual Effort', text: 'Takes me out on dates too & introduces me to her friends and hobbies.' }
+      ];
+
+      var CHAPTERS = [
+        {
+          badge: 'Chapter 1 of 4',
+          emoji: '🌸',
+          title: 'Slow & Steady Hearts',
+          text: 'Eleanor the Snail 🐌 & Alan the Turtle 🐢 discovering that taking life one gentle step at a time makes every moment sweeter—no rush, just cozy companionship.',
+          quote: '“Taking life one gentle step at a time makes every moment sweeter.”',
+          svg: '<svg viewBox="0 0 210 140" width="190" height="126"><ellipse cx="105" cy="120" rx="88" ry="13" fill="#FADADD"/><g transform="translate(32,66)"><path d="M4,34 Q24,36 44,32 Q48,26 42,24 Q36,24 34,29 L8,29 Q2,30 4,34 Z" fill="#FADADD" stroke="#363338" stroke-width="2"/><circle cx="22" cy="20" r="13" fill="#FF5C93" stroke="#363338" stroke-width="2"/><path d="M22,20 m-6,0 a6,6 0 1,0 12,0 a4,4 0 1,0 -8,0" fill="none" stroke="#FFF" stroke-width="2"/></g><g transform="translate(124,74)"><ellipse cx="10" cy="24" rx="5" ry="3.5" fill="#9EEFE8" stroke="#363338" stroke-width="1.8"/><ellipse cx="30" cy="24" rx="5" ry="3.5" fill="#9EEFE8" stroke="#363338" stroke-width="1.8"/><circle cx="4" cy="17" r="6.5" fill="#9EEFE8" stroke="#363338" stroke-width="2"/><path d="M10,21 A15,13 0 0,1 40,21 Z" fill="#2EC4B6" stroke="#363338" stroke-width="2"/></g><path d="M105,36 C99,28 87,32 87,41 C87,50 105,62 105,62 C105,62 123,50 123,41 C123,32 111,28 105,36 Z" fill="#FF5C93"/></svg>'
+        },
+        {
+          badge: 'Chapter 2 of 4',
+          emoji: '🏠',
+          title: 'Two Shells, One Home',
+          text: 'From homemade salmon & scallops, tomato-egg stir-fry, and udon nights to Cat Quest co-op marathons, Mahjong tiles, and warm birthday cakes.',
+          quote: '“Cozy kitchens, Player 2 co-op nights, and warm birthday cakes.”',
+          svg: '<svg viewBox="0 0 210 140" width="190" height="126"><ellipse cx="105" cy="122" rx="88" ry="12" fill="#DDF9F6"/><polygon points="105,20 52,64 158,64" fill="#FF5C93" stroke="#363338" stroke-width="2.2" stroke-linejoin="round"/><rect x="65" y="64" width="80" height="52" rx="8" fill="#FFFDFB" stroke="#363338" stroke-width="2.2"/><rect x="94" y="82" width="22" height="34" rx="11" fill="#FADADD" stroke="#363338" stroke-width="2"/><circle cx="105" cy="46" r="9" fill="#FFF" stroke="#363338" stroke-width="1.8"/><text x="99" y="50" font-size="11">💗</text></svg>'
+        },
+        {
+          badge: 'Chapter 3 of 4',
+          emoji: '🚲',
+          title: 'Side-Quest Adventurers',
+          text: 'Biking around Governors Island, wandering Beacon and Cold Spring, tasting sake in NYC, and cheering each other on across every pickleball court.',
+          quote: '“Every trail, sake bar, and pickleball rally is better with you.”',
+          svg: '<svg viewBox="0 0 210 140" width="190" height="126"><ellipse cx="105" cy="122" rx="88" ry="12" fill="#FADADD"/><circle cx="70" cy="98" r="17" fill="none" stroke="#FF5C93" stroke-width="4"/><circle cx="140" cy="98" r="17" fill="none" stroke="#2EC4B6" stroke-width="4"/><path d="M70,98 L102,72 L140,98 L108,98 Z" fill="none" stroke="#363338" stroke-width="3" stroke-linejoin="round"/><text x="82" y="62" font-size="22">🐌🐢</text></svg>'
+        },
+        {
+          badge: 'Chapter 4 of 4',
+          emoji: '🌊',
+          title: 'Our Future Horizon',
+          text: 'From sakura spring mornings to turquoise ocean horizons across Japan, Taiwan, Switzerland, and Banff—Eleanor & Alan keep building a life full of peonies, sushi, and gentle love.',
+          quote: '“Building a life full of peonies, sushi, and gentle love. 🐌❤️🐢”',
+          svg: '<svg viewBox="0 0 210 140" width="190" height="126"><ellipse cx="105" cy="122" rx="88" ry="12" fill="#DDF9F6"/><circle cx="105" cy="66" r="40" fill="#FADADD" stroke="#2EC4B6" stroke-width="2.5" stroke-dasharray="5 4"/><text x="72" y="74" font-size="26">🌸💗🌊</text><text x="80" y="108" font-size="20">🐌  🐢</text></svg>'
+        }
+      ];
+
+      var MASCOT_QUOTES = [
+        'Eleanor 🐌 + Alan 🐢 = Slow & sweet forever!',
+        'Dreaming of future horizons in Japan, Taiwan, Switzerland & Banff! 🌸🌊',
+        'Strict rule: Extra salmon & scallops — zero chutoro, wagyu, ikura, or uni!',
+        'Brings probiotics for drinking nights & makes every moment sweeter!',
+        'Cat Quest 2 conquered — Cat Quest 3 & Challenger Court pickleball are next!',
+        'I can always be 100% myself around Elle. Best feeling in the world.'
+      ];
+
+      /* -----------------------------------------------------------------------
+         STATE INITIALIZATION & MERGE
+      ----------------------------------------------------------------------- */
+      var saved = safeLoad();
+
+      function mergeItems(defaults, savedList) {
+        if (!Array.isArray(savedList)) {
+          return defaults.map(function (d) { return Object.assign({}, d); });
+        }
+        var map = {};
+        for (var i = 0; i < savedList.length; i++) {
+          var s = savedList[i];
+          if (s) {
+            var k = s.name || s.title;
+            if (typeof k === 'string') map[k] = !!s.done;
+          }
+        }
+        return defaults.map(function (d) {
+          var k = d.name || d.title;
+          return Object.assign({}, d, { done: Object.prototype.hasOwnProperty.call(map, k) ? map[k] : d.done });
+        });
+      }
+
+      var state = {
+        restaurants: mergeItems(DEFAULT_RESTAURANTS, saved && saved.restaurants),
+        bakeries: mergeItems(DEFAULT_BAKERIES, saved && saved.bakeries),
+        dayTrips: mergeItems(DEFAULT_DAY_TRIPS, saved && saved.dayTrips),
+        specialOutings: mergeItems(DEFAULT_SPECIAL_OUTINGS, saved && saved.specialOutings),
+        thingsToDo: mergeItems(DEFAULT_THINGS_TO_DO, saved && saved.thingsToDo),
+        regional: {
+          nh: mergeItems(DEFAULT_REGIONAL.nh, saved && saved.regional && saved.regional.nh),
+          boston: mergeItems(DEFAULT_REGIONAL.boston, saved && saved.regional && saved.regional.boston),
+          capecod: mergeItems(DEFAULT_REGIONAL.capecod, saved && saved.regional && saved.regional.capecod)
+        },
+        goals: mergeItems(DEFAULT_GOALS, saved && saved.goals),
+        customMemories: Array.isArray(saved && saved.customMemories) ? saved.customMemories : [],
+        gifts: Array.isArray(saved && saved.gifts) && saved.gifts.length > 0
+          ? saved.gifts
+          : DEFAULT_GIFTS.map(function (g) { return Object.assign({}, g); }),
+        sliderVal: saved && typeof saved.sliderVal === 'number' ? saved.sliderVal : 15,
+
+        // UI filters
+        petalsOn: true,
+        chapterIdx: 0,
+        memoryFilter: 'all',
+        cravingFilter: 'all',
+        dirTab: 'restaurants',
+        dirHideChecked: false,
+        dirSearch: '',
+        questsHideChecked: false,
+        spinVibe: 'all',
+        isSpinning: false,
+        worldFilter: 'all',
+        scrapFilter: 'all',
+        flippedCards: {},
+        quoteIdx: 0
+      };
+
+      function persistState() {
+        safeSave({
+          restaurants: state.restaurants,
+          bakeries: state.bakeries,
+          dayTrips: state.dayTrips,
+          specialOutings: state.specialOutings,
+          thingsToDo: state.thingsToDo,
+          regional: state.regional,
+          goals: state.goals,
+          customMemories: state.customMemories,
+          gifts: state.gifts,
+          sliderVal: state.sliderVal
+        });
+      }
+
+      /* -----------------------------------------------------------------------
+         PARTICLES & AMBIENT FALLING BLOSSOMS / WATER DROPLETS
+      ----------------------------------------------------------------------- */
+      var BURST_ICONS = ['🌸', '💧', '🌊', '💗', '🌺', '✨', '🐾'];
+      function spawnBurst(x, y, count) {
+        var cx = typeof x === 'number' && x > 0 ? x : window.innerWidth / 2;
+        var cy = typeof y === 'number' && y > 0 ? y : window.innerHeight / 2;
+        var total = count || 10;
+        for (var i = 0; i < total; i++) {
+          var span = document.createElement('span');
+          span.className = 'burst-particle';
+          span.textContent = BURST_ICONS[Math.floor(Math.random() * BURST_ICONS.length)];
+          var angle = (Math.PI * 2 * i) / total + (Math.random() - 0.5) * 0.5;
+          var dist = 34 + Math.random() * 50;
+          span.style.left = cx + 'px';
+          span.style.top = cy + 'px';
+          span.style.setProperty('--dx', (Math.cos(angle) * dist).toFixed(1) + 'px');
+          span.style.setProperty('--dy', (Math.sin(angle) * dist - 14).toFixed(1) + 'px');
+          span.style.setProperty('--rot', ((Math.random() - 0.5) * 160).toFixed(0) + 'deg');
+          document.body.appendChild(span);
+          (function (el) {
+            setTimeout(function () {
+              if (el.parentNode) el.parentNode.removeChild(el);
+            }, 860);
+          })(span);
+        }
+      }
+
+      function initAmbientPetals() {
+        var container = document.getElementById('petal-container');
+        container.innerHTML = '';
+        var icons = ['🌸', '🌺', '💧', '🌸'];
+        for (var i = 0; i < 12; i++) {
+          var p = document.createElement('span');
+          p.className = 'falling-petal';
+          p.textContent = icons[i % icons.length];
+          p.style.left = (Math.random() * 96).toFixed(1) + 'vw';
+          p.style.fontSize = (13 + Math.random() * 6).toFixed(0) + 'px';
+          p.style.animationDuration = (11 + Math.random() * 9).toFixed(1) + 's';
+          p.style.animationDelay = (-Math.random() * 14).toFixed(1) + 's';
+          container.appendChild(p);
+        }
+      }
+
+      /* -----------------------------------------------------------------------
+         RENDER FUNCTIONS
+      ----------------------------------------------------------------------- */
+      function renderStory() {
+        var ch = CHAPTERS[state.chapterIdx];
+        document.getElementById('story-art').innerHTML = ch.svg;
+        document.getElementById('story-badge').textContent = ch.badge;
+        document.getElementById('story-emoji').textContent = ch.emoji;
+        document.getElementById('story-title').textContent = ch.title;
+        document.getElementById('story-text').textContent = ch.text;
+        document.getElementById('story-quote').textContent = ch.quote;
+
+        var btns = document.querySelectorAll('#chapter-tabs button');
+        for (var i = 0; i < btns.length; i++) {
+          var active = Number(btns[i].getAttribute('data-id')) === state.chapterIdx;
+          btns[i].className = active ? 'filter-pill active-pink btn-squishy' : 'filter-pill btn-squishy';
+        }
+      }
+
+      function renderShoreline() {
+        var pct = Math.max(0, Math.min(100, Number(state.sliderVal)));
+        var offset = 6 + (pct / 100) * 35;
+        var slider = document.getElementById('shoreline-slider');
+        var snail = document.getElementById('snail-walker');
+        var turtle = document.getElementById('turtle-walker');
+        var heart = document.getElementById('center-heart');
+        var banner = document.getElementById('reunion-banner');
+
+        slider.value = String(pct);
+        snail.style.left = offset + '%';
+        turtle.style.right = offset + '%';
+
+        if (pct >= 92) {
+          heart.textContent = '💖';
+          heart.style.transform = 'translate(-50%, -4px) scale(1.4)';
+          banner.classList.remove('hidden');
+        } else {
+          heart.textContent = '🌸';
+          heart.style.transform = 'translate(-50%, -4px) scale(1)';
+          banner.classList.add('hidden');
+        }
+      }
+
+      function buildCompletedMemories() {
+        var list = [];
+        state.customMemories.forEach(function (m) {
+          list.push({ title: m.title, group: 'outings', tag: 'Logged Date', emoji: '💖' });
+        });
+        state.dayTrips.forEach(function (d) {
+          if (d.done) list.push({ title: d.title, group: 'outings', tag: 'Day Trip', emoji: d.emoji });
+        });
+        state.specialOutings.forEach(function (s) {
+          if (s.done) list.push({ title: s.title, group: 'outings', tag: 'Special Outing', emoji: s.emoji });
+        });
+        state.regional.boston.forEach(function (b) {
+          if (b.done) list.push({ title: b.title + ' (Boston)', group: 'outings', tag: 'Boston Trip', emoji: '🦞' });
+        });
+        state.regional.capecod.forEach(function (c) {
+          if (c.done) list.push({ title: c.title, group: 'outings', tag: 'Cape Cod Trip', emoji: '🏖️' });
+        });
+        state.regional.nh.forEach(function (n) {
+          if (n.done) list.push({ title: n.title + ' (NH)', group: 'outings', tag: 'NH Hike', emoji: '⛰️' });
+        });
+
+        // Cozy & Games
+        if (state.goals[0] && state.goals[0].done) {
+          list.push({ title: 'Complete Cat Quest 2', group: 'cozy', tag: 'Co-op Milestone', emoji: '🐱' });
+        }
+        state.thingsToDo.forEach(function (t) {
+          if (t.done) list.push({ title: t.title, group: 'cozy', tag: 'Cozy & Games', emoji: t.emoji });
+        });
+
+        // Restaurants & Eats (deduplicated)
+        var seen = {};
+        state.restaurants.concat(state.bakeries).forEach(function (f) {
+          if (f.done) {
+            var key = f.name.toLowerCase();
+            if (!seen[key]) {
+              seen[key] = true;
+              list.push({ title: f.name, group: 'food', tag: 'Restaurant / Eat', emoji: '🍣' });
+            }
+          }
+        });
+
+        return list;
+      }
+
+      function renderMemories() {
+        var all = buildCompletedMemories();
+        var filtered = state.memoryFilter === 'all'
+          ? all
+          : all.filter(function (item) { return item.group === state.memoryFilter; });
+
+        document.getElementById('memories-count-pill').textContent = all.length + ' Memories 💖';
+
+        document.getElementById('memories-grid').innerHTML = filtered.map(function (item) {
+          return (
+            '<div class="memory-card ' + item.group + '">' +
+              '<span class="memory-emoji">' + item.emoji + '</span>' +
+              '<div>' +
+                '<div class="memory-title">' + escapeHTML(item.title) + '</div>' +
+                '<span class="memory-tag">✅ ' + escapeHTML(item.tag) + '</span>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        var pills = document.querySelectorAll('#memories-filter-row button');
+        for (var i = 0; i < pills.length; i++) {
+          var id = pills[i].getAttribute('data-id');
+          var active = id === state.memoryFilter;
+          if (active) {
+            pills[i].className = 'filter-pill active-teal btn-squishy';
+          } else if (id === 'cozy') {
+            pills[i].className = 'filter-pill teal-outline btn-squishy';
+          } else {
+            pills[i].className = 'filter-pill btn-squishy';
+          }
+        }
+      }
+
+      function renderMenuStaticAndCravings() {
+        var filtered = state.cravingFilter === 'all'
+          ? CRAVINGS
+          : CRAVINGS.filter(function (c) { return c.cat === state.cravingFilter; });
+
+        document.getElementById('cravings-grid').innerHTML = filtered.map(function (c) {
+          return (
+            '<div class="craving-item">' +
+              '<div class="craving-top">' +
+                '<span style="font-size: 1.4rem;">' + c.emoji + '</span>' +
+                '<span class="craving-cat">' + escapeHTML(c.cat) + '</span>' +
+              '</div>' +
+              '<div>' +
+                '<div class="craving-name">' + escapeHTML(c.name) + '</div>' +
+                '<div class="craving-note">' + escapeHTML(c.note) + '</div>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        var pills = document.querySelectorAll('#cravings-filter-row button');
+        for (var i = 0; i < pills.length; i++) {
+          var active = pills[i].getAttribute('data-id') === state.cravingFilter;
+          pills[i].className = active ? 'filter-pill active-pink btn-squishy' : 'filter-pill btn-squishy';
+        }
+
+        document.getElementById('goto-list').innerHTML = GOTO_SPOTS.map(function (g) {
+          return (
+            '<div class="goto-row">' +
+              '<div style="display: flex; align-items: center; gap: 10px;">' +
+                '<span style="font-size: 1.25rem;">' + g.emoji + '</span>' +
+                '<div>' +
+                  '<div style="font-family: var(--font-serif); font-weight: 700; font-size: 0.9rem;">' + escapeHTML(g.name) + '</div>' +
+                  '<div style="font-size: 0.72rem; font-weight: 600; color: var(--charcoal-muted);">' + escapeHTML(g.vibe) + '</div>' +
+                '</div>' +
+              '</div>' +
+              '<span class="eyebrow-pill eyebrow-teal" style="margin: 0; font-size: 0.64rem;">Go-To</span>' +
+            '</div>'
+          );
+        }).join('');
+
+        document.getElementById('freebies-grid').innerHTML = FREEBIES.map(function (f) {
+          return (
+            '<div class="freebie-chip">' +
+              '<span style="font-size: 1.15rem;">' + f.emoji + '</span>' +
+              '<span>' + escapeHTML(f.item) + '</span>' +
+            '</div>'
+          );
+        }).join('');
+      }
+
+      function renderDirectory() {
+        var isRest = state.dirTab === 'restaurants';
+        var source = isRest ? state.restaurants : state.bakeries;
+        var action = isRest ? 'toggle-restaurant' : 'toggle-bakery';
+        var q = state.dirSearch.trim().toLowerCase();
+
+        var html = [];
+        for (var i = 0; i < source.length; i++) {
+          var item = source[i];
+          if (state.dirHideChecked && item.done) continue;
+          if (q && item.name.toLowerCase().indexOf(q) === -1) continue;
+          html.push(
+            '<button type="button" data-action="' + action + '" data-id="' + i + '" class="check-btn btn-squishy ' + (item.done ? 'done' : '') + '">' +
+              '<span class="item-label">' + escapeHTML(item.name) + '</span>' +
+              '<span>' + (item.done ? '✅' : '⬜') + '</span>' +
+            '</button>'
+          );
+        }
+
+        document.getElementById('dir-list-grid').innerHTML = html.length
+          ? html.join('')
+          : '<p style="grid-column: 1 / -1; text-align: center; font-size: 0.82rem; font-weight: 700; color: var(--charcoal-muted); padding: 18px 0;">No matching spots found.</p>';
+
+        document.getElementById('tab-btn-restaurants').className = isRest ? 'filter-pill active-pink btn-squishy' : 'filter-pill btn-squishy';
+        document.getElementById('tab-btn-bakeries').className = !isRest ? 'filter-pill active-pink btn-squishy' : 'filter-pill btn-squishy';
+
+        var hideBtn = document.getElementById('dir-hide-btn');
+        hideBtn.textContent = state.dirHideChecked ? '👁️ Hide Checked: On' : '👁️ Hide Checked: Off';
+        hideBtn.className = state.dirHideChecked ? 'filter-pill active-teal btn-squishy' : 'filter-pill btn-squishy';
+      }
+
+      function renderQuests() {
+        function buildGroup(arr, actionName) {
+          var out = [];
+          for (var i = 0; i < arr.length; i++) {
+            var item = arr[i];
+            if (state.questsHideChecked && item.done) continue;
+            out.push(
+              '<button type="button" data-action="' + actionName + '" data-id="' + i + '" class="check-btn btn-squishy ' + (item.done ? 'done' : '') + '">' +
+                '<span style="display: flex; align-items: center; gap: 8px;">' +
+                  '<span style="font-size: 1.1rem;">' + item.emoji + '</span>' +
+                  '<span class="item-label">' + escapeHTML(item.title) + '</span>' +
+                '</span>' +
+                '<span>' + (item.done ? '✅' : '⬜') + '</span>' +
+              '</button>'
+            );
+          }
+          return out.length
+            ? out.join('')
+            : '<p style="grid-column: 1 / -1; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--charcoal-muted); padding: 10px 0;">All items completed! 🎉</p>';
+        }
+
+        document.getElementById('daytrips-grid').innerHTML = buildGroup(state.dayTrips, 'toggle-daytrip');
+        document.getElementById('special-grid').innerHTML = buildGroup(state.specialOutings, 'toggle-special');
+        document.getElementById('todo-grid').innerHTML = buildGroup(state.thingsToDo, 'toggle-todo');
+
+        var hideBtn = document.getElementById('quests-hide-btn');
+        hideBtn.textContent = state.questsHideChecked ? '👁️ Hide Checked: On' : '👁️ Hide Checked: Off';
+        hideBtn.className = state.questsHideChecked ? 'filter-pill active-teal btn-squishy' : 'filter-pill btn-squishy';
+      }
+
+      function renderTravel() {
+        function buildRegion(arr, regionKey) {
+          return arr.map(function (item, idx) {
+            return (
+              '<button type="button" data-action="toggle-regional" data-region="' + regionKey + '" data-id="' + idx + '" class="check-btn btn-squishy ' + (item.done ? 'done' : '') + '">' +
+                '<span class="item-label">' + escapeHTML(item.title) + '</span>' +
+                '<span>' + (item.done ? '✅' : '⬜') + '</span>' +
+              '</button>'
+            );
+          }).join('');
+        }
+
+        document.getElementById('nh-list').innerHTML = buildRegion(state.regional.nh, 'nh');
+        document.getElementById('boston-list').innerHTML = buildRegion(state.regional.boston, 'boston');
+        document.getElementById('capecod-list').innerHTML = buildRegion(state.regional.capecod, 'capecod');
+
+        var filtered = state.worldFilter === 'all'
+          ? WORLD_DESTINATIONS
+          : WORLD_DESTINATIONS.filter(function (d) { return d.region === state.worldFilter; });
+
+        document.getElementById('world-grid').innerHTML = filtered.map(function (d) {
+          return (
+            '<div class="world-card">' +
+              '<div class="world-card-head">' +
+                '<span style="font-size: 1.55rem;">' + d.flag + '</span>' +
+                '<h4 style="font-size: 1rem;">' + escapeHTML(d.name) + '</h4>' +
+              '</div>' +
+              '<p class="world-note">' + escapeHTML(d.note) + '</p>' +
+            '</div>'
+          );
+        }).join('');
+
+        var pills = document.querySelectorAll('#world-filter-row button');
+        for (var i = 0; i < pills.length; i++) {
+          var active = pills[i].getAttribute('data-id') === state.worldFilter;
+          pills[i].className = active ? 'filter-pill active-teal btn-squishy' : 'filter-pill teal-outline btn-squishy';
+        }
+      }
+
+      function renderScrapbook() {
+        document.getElementById('goals-grid').innerHTML = state.goals.map(function (g, idx) {
+          return (
+            '<button type="button" data-action="toggle-goal" data-id="' + idx + '" class="check-btn btn-squishy ' + (g.done ? 'done' : '') + '" style="align-items: flex-start;">' +
+              '<span style="display: flex; align-items: flex-start; gap: 8px;">' +
+                '<span style="font-size: 1.1rem;">' + g.emoji + '</span>' +
+                '<span class="item-label">' + escapeHTML(g.title) + '</span>' +
+              '</span>' +
+              '<span>' + (g.done ? '✅' : '⬜') + '</span>' +
+            '</button>'
+          );
+        }).join('');
+
+        var out = [];
+        for (var i = 0; i < SCRAPBOOK_CARDS.length; i++) {
+          var card = SCRAPBOOK_CARDS[i];
+          if (state.scrapFilter !== 'all' && card.type !== state.scrapFilter) continue;
+          var flipped = !!state.flippedCards[i];
+          out.push(
+            '<div data-action="flip-card" data-id="' + i + '" class="polaroid-card ' + (flipped ? 'flipped' : '') + '">' +
+              '<div class="polaroid-top">' +
+                '<span class="polaroid-badge ' + (card.type === 'memories' ? 'mem' : '') + '">' + escapeHTML(card.badge) + '</span>' +
+                '<span style="font-size: 0.68rem; font-weight: 800; color: var(--charcoal-muted);">🔄 Tap</span>' +
+              '</div>' +
+              (flipped
+                ? '<p class="polaroid-back-text">“Another reason you’re my favorite person in the world. 🐌❤️🐢”</p>'
+                : '<p class="polaroid-text">' + escapeHTML(card.text) + '</p>') +
+            '</div>'
+          );
+        }
+        document.getElementById('polaroid-grid').innerHTML = out.join('');
+
+        var pills = document.querySelectorAll('#scrap-filter-row button');
+        for (var j = 0; j < pills.length; j++) {
+          var active = pills[j].getAttribute('data-id') === state.scrapFilter;
+          pills[j].className = active ? 'filter-pill active-pink btn-squishy' : 'filter-pill btn-squishy';
+        }
+      }
+
+      function renderGifts() {
+        document.getElementById('gift-list').innerHTML = state.gifts.map(function (g, idx) {
+          return (
+            '<button type="button" data-action="toggle-gift" data-id="' + idx + '" class="check-btn btn-squishy ' + (g.done ? 'done' : '') + '">' +
+              '<span class="item-label">' + escapeHTML(g.text) + '</span>' +
+              '<span>' + (g.done ? '✅' : '⬜') + '</span>' +
+            '</button>'
+          );
+        }).join('');
+      }
+
+      function updateCounters() {
+        var completedCount = buildCompletedMemories().length;
+        var restUnchecked = state.restaurants.filter(function (r) { return !r.done; }).length;
+        var bakeryUnchecked = state.bakeries.filter(function (b) { return !b.done; }).length;
+        var goalsDone = state.goals.filter(function (g) { return g.done; }).length;
+
+        document.getElementById('stat-completed').textContent = String(completedCount);
+        document.getElementById('stat-to-try').textContent = String(restUnchecked + bakeryUnchecked);
+        document.getElementById('stat-quests').textContent = goalsDone + '/' + state.goals.length;
+
+        var restDone = state.restaurants.length - restUnchecked;
+        var bakeryDone = state.bakeries.length - bakeryUnchecked;
+        document.getElementById('rest-counter').textContent = restDone + '/' + state.restaurants.length;
+        document.getElementById('bakery-counter').textContent = bakeryDone + '/' + state.bakeries.length;
+
+        var dayDone = state.dayTrips.filter(function (d) { return d.done; }).length;
+        var specDone = state.specialOutings.filter(function (s) { return s.done; }).length;
+        var todoDone = state.thingsToDo.filter(function (t) { return t.done; }).length;
+        document.getElementById('daytrip-badge').textContent = dayDone + '/' + state.dayTrips.length;
+        document.getElementById('special-badge').textContent = specDone + '/' + state.specialOutings.length;
+        document.getElementById('todo-badge').textContent = todoDone + '/' + state.thingsToDo.length;
+      }
+
+      /* -----------------------------------------------------------------------
+         DATE NIGHT SLOT MACHINE
+      ----------------------------------------------------------------------- */
+      function spinSlotMachine(cx, cy) {
+        if (state.isSpinning) return;
+
+        var extras = [
+          { title: 'Fresh Pink Peonies & Flower Stroll', cat: 'special', emoji: '🌺', done: false },
+          { title: 'Cozy Pescatarian Sushi & Sake Dinner', cat: 'special', emoji: '🍣', done: false },
+          { title: 'Botanical Garden Walk', cat: 'daytrip', emoji: '🌿', done: false }
+        ];
+
+        var pool = state.dayTrips.concat(state.specialOutings, state.thingsToDo, extras).filter(function (item) {
+          if (item.done) return false;
+          return state.spinVibe === 'all' || item.cat === state.spinVibe;
+        });
+
+        var emojiEl = document.getElementById('slot-emoji');
+        var titleEl = document.getElementById('slot-title');
+        var tagEl = document.getElementById('slot-tag');
+
+        if (pool.length === 0) {
+          emojiEl.textContent = '🎉';
+          titleEl.textContent = 'Every adventure in this vibe is completed! You two are unstoppable!';
+          tagEl.textContent = '100% Complete';
+          spawnBurst(cx, cy, 16);
+          return;
+        }
+
+        state.isSpinning = true;
+        var ticks = 0;
+        var labels = { daytrip: 'Day Trip', special: 'Special Outing', todo: 'Cozy & Active' };
+
+        var timer = setInterval(function () {
+          var sample = pool[Math.floor(Math.random() * pool.length)];
+          emojiEl.textContent = sample.emoji;
+          emojiEl.style.transform = ticks % 2 === 0 ? 'scale(1.2) rotate(-8deg)' : 'scale(1.1) rotate(8deg)';
+          titleEl.textContent = sample.title;
+          ticks++;
+
+          if (ticks >= 12) {
+            clearInterval(timer);
+            var winner = pool[Math.floor(Math.random() * pool.length)];
+            emojiEl.textContent = winner.emoji;
+            emojiEl.style.transform = 'scale(1.15) rotate(0deg)';
+            titleEl.textContent = winner.title;
+            tagEl.textContent = (labels[winner.cat] || 'Adventure') + ' • Uncompleted';
+            state.isSpinning = false;
+            spawnBurst(cx, cy, 18);
+          }
+        }, 65);
+      }
+
+      /* -----------------------------------------------------------------------
+         VAULT UNLOCK / LOCK HELPERS
+      ----------------------------------------------------------------------- */
+      function openVaultModal() {
+        var modal = document.getElementById('vault-modal');
+        var input = document.getElementById('passcode-input');
+        var err = document.getElementById('passcode-error');
+        err.classList.add('hidden');
+        input.value = '';
+        modal.classList.remove('hidden');
+        setTimeout(function () { input.focus(); }, 50);
+      }
+
+      function closeVaultModal() {
+        document.getElementById('vault-modal').classList.add('hidden');
+      }
+
+      function unlockVault() {
+        closeVaultModal();
+        document.getElementById('vault-locked-view').classList.add('hidden');
+        document.getElementById('vault-unlocked-view').classList.remove('hidden');
+        spawnBurst(window.innerWidth / 2, window.innerHeight / 2, 20);
+      }
+
+      function lockVault() {
+        document.getElementById('vault-unlocked-view').classList.add('hidden');
+        document.getElementById('vault-locked-view').classList.remove('hidden');
+      }
+
+      function checkPasscode() {
+        var val = document.getElementById('passcode-input').value.trim();
+        if (val === '1010' || val === '0423') {
+          unlockVault();
+        } else {
+          document.getElementById('passcode-error').classList.remove('hidden');
+        }
+      }
+
+      /* -----------------------------------------------------------------------
+         EVENT DELEGATION & INPUT HANDLERS
+      ----------------------------------------------------------------------- */
+      document.addEventListener('click', function (e) {
+        var target = e.target.closest('[data-action]');
+        if (!target) return;
+
+        var action = target.getAttribute('data-action');
+        var id = target.getAttribute('data-id');
+        var cx = e.clientX;
+        var cy = e.clientY;
+
+        if (action === 'toggle-petals') {
+          state.petalsOn = !state.petalsOn;
+          document.getElementById('petal-container').style.display = state.petalsOn ? 'block' : 'none';
+          document.getElementById('petal-dot').className = state.petalsOn ? 'status-dot' : 'status-dot off';
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'pet-hero-cat') {
+          var bubble = document.getElementById('mascot-bubble');
+          bubble.classList.add('show-mobile');
+          bubble.textContent = '“Calico Kitty purrs: Welcome to Alan & Eleanor’s Field Guide to Us! 🐾🌸”';
+          spawnBurst(cx, cy, 12);
+        } else if (action === 'tap-mascot') {
+          spawnBurst(cx, cy, 12);
+        } else if (action === 'set-chapter') {
+          state.chapterIdx = Number(id) || 0;
+          renderStory();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'prev-chapter') {
+          state.chapterIdx = (state.chapterIdx - 1 + CHAPTERS.length) % CHAPTERS.length;
+          renderStory();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'next-chapter') {
+          state.chapterIdx = (state.chapterIdx + 1) % CHAPTERS.length;
+          renderStory();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'meet-in-middle') {
+          state.sliderVal = 100;
+          renderShoreline();
+          persistState();
+          spawnBurst(cx, cy, 20);
+        } else if (action === 'filter-memories') {
+          state.memoryFilter = id || 'all';
+          renderMemories();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'filter-cravings') {
+          state.cravingFilter = id || 'all';
+          renderMenuStaticAndCravings();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'switch-dir') {
+          state.dirTab = id || 'restaurants';
+          renderDirectory();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'toggle-dir-hide') {
+          state.dirHideChecked = !state.dirHideChecked;
+          renderDirectory();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'toggle-restaurant') {
+          var rIdx = Number(id);
+          if (state.restaurants[rIdx]) {
+            state.restaurants[rIdx].done = !state.restaurants[rIdx].done;
+            renderDirectory();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'toggle-bakery') {
+          var bIdx = Number(id);
+          if (state.bakeries[bIdx]) {
+            state.bakeries[bIdx].done = !state.bakeries[bIdx].done;
+            renderDirectory();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'set-spin-vibe') {
+          state.spinVibe = id || 'all';
+          var vibeBtns = document.querySelectorAll('#spin-vibe-row button');
+          for (var i = 0; i < vibeBtns.length; i++) {
+            var active = vibeBtns[i].getAttribute('data-id') === state.spinVibe;
+            vibeBtns[i].className = active ? 'filter-pill active-pink btn-squishy' : 'filter-pill btn-squishy';
+          }
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'spin-date') {
+          spinSlotMachine(cx, cy);
+        } else if (action === 'toggle-quests-hide') {
+          state.questsHideChecked = !state.questsHideChecked;
+          renderQuests();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'toggle-daytrip') {
+          var dIdx = Number(id);
+          if (state.dayTrips[dIdx]) {
+            state.dayTrips[dIdx].done = !state.dayTrips[dIdx].done;
+            renderQuests();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'toggle-special') {
+          var sIdx = Number(id);
+          if (state.specialOutings[sIdx]) {
+            state.specialOutings[sIdx].done = !state.specialOutings[sIdx].done;
+            renderQuests();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'toggle-todo') {
+          var tIdx = Number(id);
+          if (state.thingsToDo[tIdx]) {
+            state.thingsToDo[tIdx].done = !state.thingsToDo[tIdx].done;
+            renderQuests();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'toggle-regional') {
+          var reg = target.getAttribute('data-region');
+          var regIdx = Number(id);
+          if (state.regional[reg] && state.regional[reg][regIdx]) {
+            state.regional[reg][regIdx].done = !state.regional[reg][regIdx].done;
+            renderTravel();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'filter-world') {
+          state.worldFilter = id || 'all';
+          renderTravel();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'toggle-goal') {
+          var gIdx = Number(id);
+          if (state.goals[gIdx]) {
+            state.goals[gIdx].done = !state.goals[gIdx].done;
+            renderScrapbook();
+            renderMemories();
+            updateCounters();
+            persistState();
+            spawnBurst(cx, cy, 12);
+          }
+        } else if (action === 'filter-scrap') {
+          state.scrapFilter = id || 'all';
+          renderScrapbook();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'flip-card') {
+          var cIdx = Number(id);
+          state.flippedCards[cIdx] = !state.flippedCards[cIdx];
+          renderScrapbook();
+          spawnBurst(cx, cy, 8);
+        } else if (action === 'open-vault-modal') {
+          openVaultModal();
+        } else if (action === 'close-vault-modal') {
+          closeVaultModal();
+        } else if (action === 'submit-passcode') {
+          checkPasscode();
+        } else if (action === 'peek-vault') {
+          unlockVault();
+        } else if (action === 'lock-vault') {
+          lockVault();
+        } else if (action === 'toggle-gift') {
+          var giftIdx = Number(id);
+          if (state.gifts[giftIdx]) {
+            state.gifts[giftIdx].done = !state.gifts[giftIdx].done;
+            renderGifts();
+            persistState();
+            spawnBurst(cx, cy, 10);
+          }
+        } else if (action === 'scroll-top') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (action === 'tap-corner-mascot') {
+          state.quoteIdx = (state.quoteIdx + 1) % MASCOT_QUOTES.length;
+          var mBubble = document.getElementById('mascot-bubble');
+          mBubble.classList.add('show-mobile');
+          mBubble.textContent = '“' + MASCOT_QUOTES[state.quoteIdx] + '”';
+
+          var heart = document.createElement('span');
+          heart.className = 'float-heart';
+          heart.style.fontSize = '1.1rem';
+          heart.style.right = '18px';
+          heart.style.bottom = '48px';
+          heart.textContent = state.quoteIdx % 2 === 0 ? '💖' : '💧';
+          target.appendChild(heart);
+          setTimeout(function () {
+            if (heart.parentNode) heart.parentNode.removeChild(heart);
+          }, 1150);
+          spawnBurst(cx, cy, 10);
+        } else if (action === 'reset-progress') {
+          safeClear();
+          window.location.reload();
+        }
+      });
+
+      document.getElementById('shoreline-slider').addEventListener('input', function (e) {
+        state.sliderVal = Number(e.target.value);
+        renderShoreline();
+        persistState();
+      });
+
+      document.getElementById('dir-search').addEventListener('input', function (e) {
+        state.dirSearch = e.target.value;
+        renderDirectory();
+      });
+
+      document.getElementById('add-memory-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = document.getElementById('new-memory-input');
+        var val = input.value.trim();
+        if (!val) return;
+        state.customMemories.unshift({ title: val });
+        input.value = '';
+        renderMemories();
+        updateCounters();
+        persistState();
+        spawnBurst(window.innerWidth / 2, window.innerHeight / 2, 14);
+      });
+
+      document.getElementById('add-gift-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = document.getElementById('new-gift-input');
+        var val = input.value.trim();
+        if (!val) return;
+        state.gifts.push({ text: val, done: false });
+        input.value = '';
+        renderGifts();
+        persistState();
+        spawnBurst(window.innerWidth / 2, window.innerHeight / 2, 12);
+      });
+
+      document.getElementById('passcode-input').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          checkPasscode();
+        }
+      });
+
+      // Scroll Spy & Back-to-Top
+      var topBtn = document.getElementById('top-btn');
+      var sectionIds = ['our-story', 'memories', 'elles-menu', 'dates-adventures', 'travel-hikes', 'scrapbook', 'vault'];
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 320) {
+          topBtn.classList.remove('hidden');
+        } else {
+          topBtn.classList.add('hidden');
+        }
+
+        var activeSec = '';
+        for (var i = 0; i < sectionIds.length; i++) {
+          var el = document.getElementById(sectionIds[i]);
+          if (el && el.getBoundingClientRect().top <= 140) {
+            activeSec = sectionIds[i];
+          }
+        }
+        var navLinks = document.querySelectorAll('.nav-link');
+        for (var j = 0; j < navLinks.length; j++) {
+          if (navLinks[j].getAttribute('data-nav') === activeSec) {
+            navLinks[j].classList.add('active');
+          } else {
+            navLinks[j].classList.remove('active');
+          }
+        }
+      });
+
+      /* -----------------------------------------------------------------------
+         INITIAL RENDER ON LOAD
+      ----------------------------------------------------------------------- */
+      initAmbientPetals();
+      renderStory();
+      renderShoreline();
+      renderMemories();
+      renderMenuStaticAndCravings();
+      renderDirectory();
+      renderQuests();
+      renderTravel();
+      renderScrapbook();
+      renderGifts();
+      updateCounters();
+    })();
+  </script>
+</body>
+</html>
